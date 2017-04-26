@@ -11,7 +11,7 @@
                     width: {min: 640},
                     height: {min: 480},
                     aspectRatio: {min: 1, max: 100},
-                    facingMode: "environment" // or "user" for the front camera
+                    facingMode: "user" // or "user" for the front camera
                 }
             },
             locator: {
