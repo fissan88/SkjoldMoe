@@ -7,6 +7,7 @@ var express = require('express');        // call express
 var app = express();                     // define our app using express
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
+var handlebars = require('hbs');
 
 // INITIALIZATION
 // =============================================================================
@@ -28,20 +29,9 @@ app.use(express.static('public'));
 
 // ROUTES FOR OUR APP
 // =============================================================================
-var router = express.Router();
+var indexRouter = require('./route/index.js')(express);
+app.use(indexRouter);
 
-// router.route('/message')
-//     .get(function (req, res) {
-//         Message.find(function (err,msg) {
-//             if(err){
-//                 res.send(err);
-//             }
-//             else{
-//                 res.json(msg);
-//             }
-//         })
-//     })
-//
 //     .post(function (req, res) {
 //         var message = new Message({
 //             time: Date.now(),
@@ -99,7 +89,12 @@ var router = express.Router();
 //
 //     }) ;
 
-app.use('/', router);
+
+
+//Setup views
+app.set('view engine', 'hbs');
+app.set('views', './public/views');
+
 
 // START THE SERVER
 // =============================================================================
