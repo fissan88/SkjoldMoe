@@ -1,87 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Title</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <title>Datoregistering</title>
-    <script src="script.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="quagga.min.js"></script>
+    <script type="text/javascript" src="scannerScript.js"></script>
+    <style>
+        #interactive.viewport {position: relative; width: 100%; height: auto; overflow: hidden; text-align: center;}
+        #interactive.viewport > canvas, #interactive.viewport > video {max-width: 100%;width: 100%;}
+        canvas.drawing, canvas.drawingBuffer {position: absolute; left: 0; top: 0;}
+    </style>
 </head>
 <body>
-
-<div class="jumbotron text-center">
-    <h1>Datoregisterings system</h1>
-</div>
-
-
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Navigation</a>
-        </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-            <a href="/index.html" class="btn btn-success navbar-btn btn-lg active" role="button">Datoliste</a>
-            <a href="/registrer.html" class="btn btn-success navbar-btn btn-lg" role="button">Registrer</a>
-            <a href="/kasseret.html" class="btn btn-success navbar-btn btn-lg" role="button">Kasseret</a>
-            <a href="/statistik.html" class="btn btn-success navbar-btn btn-lg" role="button">Statistik</a>
-        </div>
-    </div>
-</nav>
-
-<div class="container">
-    <div  class="row">
-        <div class="col-sm-3">
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <h1 class="panel-title">Sortiment</h1>
-                </div>
-                <div class="panel-body">
-                    Liste med vare her
-                </div>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="input-group">
+            <input id="scanner_input" class="form-control" placeholder="Click the button to scan an EAN..." type="text" />
+            <span class="input-group-btn">
+				<button class="btn btn-default" type="button" data-toggle="modal" data-target="#livestream_scanner">
+					<i class="fa fa-barcode"></i>
+				</button>
+			</span>
+        </div><!-- /input-group -->
+    </div><!-- /.col-lg-6 -->
+</div><!-- /.row -->
+<div class="modal" id="livestream_scanner">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Barcode Scanner</h4>
             </div>
-            <button type="button" id="scanBtn" class="btn btn-success btn-block">Scan</button>
-        </div>
-        <div class="col-sm-3">
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <h1 class="panel-title">Scan</h1>
-                </div>
-                <div class="panel-body" id="scanPic">
-                    her skal koden være til scanner billede
-                </div>
+            <div class="modal-body" style="position: static">
+                <div id="interactive" class="viewport"></div>
+                <div class="error"></div>
             </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <h1 class="panel-title">Info</h1>
-                </div>
-                <div class="panel-body">
-                    <input type="number" placeholder="Vælg Antal">
-                </div>
+            <div class="modal-footer">
+                <label class="btn btn-default pull-left">
+                    <i class="fa fa-camera"></i> Use camera app
+                    <input type="file" accept="image/*;capture=camera" capture="camera" class="hidden" />
+                </label>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
             </div>
-            <button type="button" class="btn btn-success btn-block">Godkend</button>
-        </div>
-        <div class="col-sm-3">
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <h1 class="panel-title">Varebillede</h1>
-                </div>
-                <div class="panel-body">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<footer class="footer"><p class="text-center">Copyright &copy; Ingen Langhalm Tærsket Inc.</p></footer>
-
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 </body>
 </html>
