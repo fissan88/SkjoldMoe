@@ -19,6 +19,6 @@ module.exports = function (express) {
                 vareListe: arrVarer
             });
         });
-    
+
     return router;
 };
