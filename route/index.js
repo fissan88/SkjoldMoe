@@ -12,8 +12,9 @@ arrVarer =  [
 module.exports = function (express) {
     var router = express.Router();
 
-    router.route('/')
+    router.route('/');
         .get(function (req, res) {
+            // res.send("Herro");
             res.render('layout', {
                 vareListe: arrVarer
             });
