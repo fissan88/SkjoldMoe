@@ -8,20 +8,20 @@
             inputStream: {
                 type : "LiveStream",
                 constraints: {
-                    width: {min: 640},
-                    height: {min: 480},
+                    width: {min: 800},
+                    height: {min: 600},
                     aspectRatio: {min: 1, max: 100},
                     facingMode: "user" // or "user" for the front camera
                 }
             },
             locator: {
-                patchSize: "medium",
-                halfSample: true
+                patchSize: "large",
+                halfSample: false
             },
             numOfWorkers: (navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 4),
             decoder: {
                 "readers":[
-                    {"format":"ean_reader","config":{}}
+                    {"format":"ean_8_reader","config":{}}
                 ]
             },
             locate: true
