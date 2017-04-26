@@ -1,96 +1,3 @@
-/*button {*/
-    /*height: 150px;*/
-    /*width: 150px;*/
-    /*max-width: 100%;*/
-
-    /*border-radius: 100%;*/
-    /*background: linear-gradient(#99389f, #752a79);*/
-    /*background-color: #87318c;*/
-    /*border-color: #632466;*/
-    /*color: white;*/
-    /*text-shadow: 0 -1px 1px rgba(26, 9, 27, 0.35);*/
-    /*border: 1px solid;*/
-    /*outline: none;*/
-
-    /*font-weight: bold;*/
-    /*font-size: 30px;*/
-    /*text-decoration: none;*/
-    /*text-align: center;*/
-    /*!*margin-left : auto;*!*/
-    /*!*margin-top : 30px;*!*/
-    /*!*margin-bottom : 40px;*!*/
-    /*!*margin-right : auto;*!*/
-/*}*/
-
-/*button:focus {*/
-    /*background:linear-gradient(#752a79, #99389f);*/
-    /*color: #32e62b;*/
-    /*border: 5px solid;*/
-/*}*/
-
-/*button:hover {*/
-    /*color: #32e62b;*/
-
-/*}*/
-
-/*.container {*/
-    /*width: 100%;*/
-    /*border: 1px solid gray;*/
-/*}*/
-
-/*.header, .footer {*/
-    /*padding: 1em;*/
-    /*color: white;*/
-    /*background: linear-gradient(#752a79, #99389f);*/
-    /*clear: left;*/
-    /*text-align: center;*/
-/*}*/
-
-/*.nav {*/
-    /*!*max-width: 160px;*!*/
-    /*!*margin: 0;*!*/
-    /*!*padding: 1em;*!*/
-    /*border-bottom: 1px solid gray;*/
-    /*alignment: center;*/
-    /*text-align: center;*/
-/*}*/
-
-/*.nav, .button {*/
-    /*float: left;*/
-/*}*/
-
-/*section{*/
-    /*float: left;*/
-    /*max-width: 160px;*/
-    /*margin: 0;*/
-    /*padding: 1em;*/
-/*}*/
-
-/*article {*/
-    /*margin-left: 170px;*/
-    /*border-left: 1px solid gray;*/
-    /*padding: 1em;*/
-    /*overflow: hidden;*/
-/*}*/
-
-/*.footer {*/
-    /*border: 1px solid blue;*/
-/*}*/
-
-/*.navbar-default {*/
-    /*background: white;*/
-    /*border: 1px solid blue;*/
-    /*margin: 0px;*/
-    /*padding: 0px;*/
-/*}*/
-/*.jumbotron{*/
-    /*margin: 0px;*/
-    /*padding: 0px;*/
-/*}*/
-/*.container{*/
-    /*margin: 0px;*/
-    /*padding: 0px;*/
-/*}*/
 .btn-circle {
     width: 30px;
     height: 30px;
@@ -116,4 +23,9 @@
     line-height: 1.33;
     border-radius: 35px;
 }
+
+#interactive.viewport {position: relative; width: 100%; height: auto; overflow: hidden; text-align: center;}
+#interactive.viewport > canvas, #interactive.viewport > video {max-width: 100%;width: 100%;}
+canvas.drawing, canvas.drawingBuffer {position: absolute; left: 0; top: 0;}
+
 
