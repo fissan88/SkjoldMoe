@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
     <title>Datoregistering</title>
     <script src="../script.js"></script>
     <link rel="stylesheet" type="text/css" href="../style.css">
@@ -15,7 +16,6 @@
 <div class="jumbotron text-center">
     <h1>Datoregisterings system</h1>
 </div>
-
 
 <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -28,56 +28,18 @@
             <a class="navbar-brand" href="#">Navigation</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
-            <a href="/index.html" class="btn btn-success navbar-btn btn-lg active" role="button">Datoliste</a>
-            <a href="/registrer.html" class="btn btn-success navbar-btn btn-lg" role="button">Registrer</a>
-            <a href="/kasseret.html" class="btn btn-success navbar-btn btn-lg" role="button">Kasseret</a>
-            <a href="/statistik.html" class="btn btn-success navbar-btn btn-lg" role="button">Statistik</a>
+            <a id="btnDatoliste" class="btn btn-success navbar-btn btn-lg active" role="button">Datoliste</a>
+            <a id="btnRegistrer" class="btn btn-success navbar-btn btn-lg" role="button">Registrer</a>
+            <a id="btnKasseret" class="btn btn-success navbar-btn btn-lg" role="button">Kasseret</a>
+            <a id="btnStatistik" class="btn btn-success navbar-btn btn-lg" role="button">Statistik</a>
         </div>
     </div>
 </nav>
 
-<div class="container">
-    <div  class="row">
-        <div class="col-sm-3">
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <h1 class="panel-title">Nærtudløbne Varer</h1>
-                </div>
-                <div class="panel-body">
-                    <table>
-                        <tr><td>Navn</td><td>Udløbsdato</td><td>Antal</td></tr>
-                        {{#each varerListe}}
-                            <tr>
-                                <td>{{vareNavn}}</td><td>{{udløbsDato}}</td><td>{{antal}}</td>
-                            </tr>
-                        {{/each}}
-                    </table>
-                </div>
-            </div>
-            <button type="button" class="btn btn-success btn-block">Scan</button>
-        </div>
-        <div class="col-sm-3">
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <h1 class="panel-title">Info</h1>
-                </div>
-                <div class="panel-body">
-                    <input type="number" placeholder="Vælg Antal">
-                </div>
-            </div>
-            <button type="button" class="btn btn-success btn-block">Godkend</button>
-        </div>
-        <div class="col-sm-6">
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <h1 class="panel-title">Varebillede</h1>
-                </div>
-                <div class="panel-body">
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="container" id="container">
+    {{{body}}}
 </div>
+
 <footer class="footer"><p class="text-center">Copyright &copy; Ingen Langhalm Tærsket Inc.</p></footer>
 
 </body>

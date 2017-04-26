@@ -1,0 +1,40 @@
+<div  class="row">
+    <div class="col-sm-3">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h1 class="panel-title">Nærtudløbne Varer</h1>
+            </div>
+            <div class="panel-body">
+                <table>
+                    <tr><td>Navn</td><td>Udløbsdato</td><td>Antal</td></tr>
+                    {{#each vareListe}}
+                        <tr>
+                            <td>{{vareNavn}}</td><td>{{udløbsDato}}</td><td>{{antal}}</td>
+                        </tr>
+                    {{/each}}
+                </table>
+            </div>
+        </div>
+        <button type="button" class="btn btn-success btn-block">Scan</button>
+    </div>
+    <div class="col-sm-3">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h1 class="panel-title">Info</h1>
+            </div>
+            <div class="panel-body">
+                <input type="number" placeholder="Vælg Antal">
+            </div>
+        </div>
+        <button type="button" class="btn btn-success btn-block">Godkend</button>
+    </div>
+    <div class="col-sm-6">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h1 class="panel-title">Varebillede</h1>
+            </div>
+            <div class="panel-body">
+            </div>
+        </div>
+    </div>
+</div>
