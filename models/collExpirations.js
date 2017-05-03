@@ -6,7 +6,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var collExpirations = new Schema({
-    productName: String,
+    barcode: Number,
     date: Date,
     quantity: Number
 },  {collection: 'collExpirations', versionKey: false});
+
+module.exports = mongoose.model('collExp', collExpirations);
