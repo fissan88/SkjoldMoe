@@ -18,6 +18,9 @@ module.exports = function (express) {
             res.render('index', {
                 vareListe: arrVarer
             });
+        })
+        .post(function (req,res) {
+            
         });
 
     return router;

@@ -31,4 +31,15 @@ $(document).ready(function() {
         compileNewBody("statistik.hbs");
     });
 
+    $('#btnCreateProduct').click(function(){
+        var productName = $('newProductName').val();
+        var productBarcode = $('newProductBarcode').val();
+
+        var msg = {
+            _id: productBarcode,
+            name: productName
+        };
+
+
+    });
 });
