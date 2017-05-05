@@ -20,21 +20,30 @@ describe('Database Manipulation Krav', () => {
             testObject.save(done);
         });
 
-        it("Objektet er blevet hentet og verificeret fra databasen", (done) => {
+        it("Objektet er blevet hentet fra databasen", (done) => {
 
 
-            collExp.findOne({barcode: "57045399", date: testDate.getDate(), quantity: 5}, (err, item) => {
+            collExp.find({barcode: "57045399", date: testDate.getDate(),quantity: 5}, (err, item) => {
                 if (err) {
                     done(err);
                 } else {
                     testItem = item;
-                    assert.equal(testItem.barcode, 57045399);
-                    var itemDate = new Date(testItem.date);
-                    assert.equal(itemDate.getDate(), testDate.getDate());
-                    assert.equal(testItem.quantity, 5);
                     done();
                 }
             });
+        });
+
+        it("Objektet er blevet verificeret", (done) => {
+
+                if (testItem.length == 0) {
+                    throw new Error('Item er tomt');
+                } else {
+                    assert.equal(testItem[0].barcode, 57045399);
+                    var itemDate = new Date(testItem[0].date);
+                    assert.equal(itemDate.getDate(), testDate.getDate());
+                    assert.equal(testItem[0].quantity, 5);
+                    done();
+                }
         });
 
         it("Objektet er blevet slettet igen fra databasen", (done) => {
