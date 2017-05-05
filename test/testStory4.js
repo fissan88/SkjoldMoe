@@ -1,14 +1,14 @@
 var collExp = require('../models/collExpirations');
 var assert = require("assert");
 var mongoose = require('mongoose');
+var controller = require('../controllers/controller');
 
 
+var testDate = new Date;
+var testItem;
 
 mongoose.connect("mongodb://user:1234@ds111461.mlab.com:11461/skjoldmoe").connection;
 describe('Database Manipulation Krav', () => {
-
-    var testDate = new Date;
-    var testItem;
 
     describe("Registeringen virker hvis...", () => {
         it("Opret og save dato objekt virker", (done) => {
@@ -51,5 +51,25 @@ describe('Database Manipulation Krav', () => {
 
             collExp.deleteOne('collExpirations',{_id: id}, done())
         });
-    })
+    });
+
+    describe("CRUD funktionerne i controlleren virker hvis...", (done) => {
+        it("Test af create", (done) => {
+              controller.createCollExpiration("57045399", testDate, 5);
+              done();
+        });
+        it("Test af get", (done) => {
+            controller.getCollExpiration("57045399", testDate, 5);
+            done();
+        });
+        // it("Test af update", (done) => {
+        //     controller.updateCollExpiration("57045399", testDate, 5, "57045399", testDate, 10);
+        //     done();
+        // });
+        // it("Test af delete", (done) => {
+        //     controller.deleteCollExpiration("57045399", testDate, 5);
+        //     done();
+        // });
+
+    });
 });
