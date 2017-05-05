@@ -5,6 +5,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+
 var collExpirations = new Schema({
     barcode: String,
     date: Date,
