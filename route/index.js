@@ -1,9 +1,10 @@
 /**
  * Created by eaajejen54 on 20-04-2017.
  */
+var express = require('express');
+var router = express.Router();
 
 module.exports = function (express) {
-    var router = express.Router();
 
     var arrVarer =  [
         {vareNavn: "vare1", udløbsDato: "i morgen", antal: "10"},
