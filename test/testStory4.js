@@ -22,7 +22,7 @@ describe('Database Manipulation Krav', () => {
                 if (err) {
                     done(err);
                 } else {
-                    
+
                     assert.deepEqual(item[0].barcode, 57045399);
                     var itemDate = new Date(item[0].date);
                     assert.deepEqual(itemDate, date);
