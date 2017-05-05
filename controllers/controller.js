@@ -20,10 +20,12 @@ exports.getCollExpiration = (barcode, date, quantity) => {
 };
 
 exports.deleteCollExpiration = (barcode, date, quantity) => {
-    collExp.findOneAndRemove({barcode: barcode, date: {
-        $gte: new Date(date.getDate()),
-        $lt: date
-    }, quantity: quantity});
+    // collExp.remove({barcode: barcode, date: {
+    //     $gte: new Date(date.getDate()),
+    //     $lt: date
+    // }, quantity: quantity});
+
+    collExp.remove({barcode: barcode, date: date.setHours(0,0,0,0), quantity: quantity});
 };
 
 exports.updateCollExpiration = (oldBarcode, oldDate, oldQuantity, newBarcode, newDate, newQuantity) => {

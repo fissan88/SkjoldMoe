@@ -3,6 +3,7 @@ var assert = require("assert");
 var controller = require('../controllers/controller');
 
 var testDate = new Date;
+testDate.setHours(0,0,0,0);
 var testItem;
 var testObject = new collExp({
     barcode: "57045399",
