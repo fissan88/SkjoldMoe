@@ -46,11 +46,11 @@ describe('Database Manipulation Krav', () => {
                 }
         });
 
-        it("Objektet er blevet slettet igen fra databasen", (done) => {
-            var id = new mongoose.Types.ObjectId(testItem["_id"]);
-
-            collExp.deleteOne('collExpirations',{_id: id}, done())
-        });
+        // it("Objektet er blevet slettet igen fra databasen", (done) => {
+        //     var id = new mongoose.Types.ObjectId(testItem["_id"]);
+        //
+        //     collExp.deleteOne('collExpirations',{_id: id}, done())
+        // });
     });
 
     describe("CRUD funktionerne i controlleren virker hvis...", (done) => {

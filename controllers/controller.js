@@ -2,39 +2,38 @@
  * Created by kaspe on 05-05-2017.
  */
 var collExp = require('../models/collExpirations');
-var mongoose = require('mongoose');
 
-var createCollExpiration = (barcode, date, quantity) => {
-    var item = new collExp({
+exports.createCollExpiration = (barcode, date, quantity) => {
+    let tmpItem = new collExp({
         barcode: barcode,
         date: date,
         quantity: quantity
     });
-    item.save();
-    return item;
+    tmpItem.save()
+    return tmpItem;
 };
 
-var getCollExpiration = (barcode, date, quantity) => {
+exports.getCollExpiration = (barcode, date, quantity) => {
     collExp.find({barcode: barcode, date: date, quantity: quantity}, (err, item) => {
         return item;
     });
 };
 
-var deleteCollExpiration = (barcode, date, quantity) => {
+exports.deleteCollExpiration = (barcode, date, quantity) => {
     collExp.deleteOne('collExpirations', {barcode: barcode, date: date, quantity: quantity});
 };
 
-var updateCollExpiration = (oldBarcode, oldDate, oldQuantity, newBarcode, newDate, newQuantity) => {
-    createCollExpiration(newBarcode, newDate, newQuantity);
-    deleteCollExpiration(oldBarcode, oldDate, oldQuantity);
+exports.updateCollExpiration = (oldBarcode, oldDate, oldQuantity, newBarcode, newDate, newQuantity) => {
+    this.createCollExpiration(newBarcode, newDate, newQuantity);
+    this.deleteCollExpiration(oldBarcode, oldDate, oldQuantity);
 };
 
-module.exports = {
-    'createCollExpiration': createCollExpiration,
-    'getCollExpiration': getCollExpiration,
-    'deleteCollExpiration': deleteCollExpiration,
-    'updateCollExpiration': updateCollExpiration
-};
+// module.exports = {
+//     'createCollExpiration': createCollExpiration,
+//     'getCollExpiration': getCollExpiration,
+//     'deleteCollExpiration': deleteCollExpiration,
+//     'updateCollExpiration': updateCollExpiration
+// };
 
 //
 // module.exports = mongoose.model('createCollExpiration', createCollExpiration);
