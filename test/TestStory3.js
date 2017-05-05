@@ -11,7 +11,7 @@ describe('Database Manipulation Krav', () => {
     describe("Registeringen af produkt virker hvis...", () => {
         it("Opret og save barcode objekt virker", (done) => {
             var testObject = new collProduct({
-                _id: "13378888",
+                _id: "13378838",
                 name: "SkinkeJohnsTestSkinke",
                 isDriedGoods: false
             });
