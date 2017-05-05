@@ -23,7 +23,7 @@ describe('Database Manipulation Krav', () => {
         it("Objektet er blevet hentet fra databasen", (done) => {
 
 
-            collExp.find({barcode: "57045399", date: testDate.getDate(),quantity: 5}, (err, item) => {
+            collExp.find({barcode: "57045399", date: testDate,quantity: 5}, (err, item) => {
                 if (err) {
                     done(err);
                 } else {
