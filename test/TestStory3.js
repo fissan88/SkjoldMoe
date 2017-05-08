@@ -2,16 +2,19 @@
  * Created by PWM on 05-05-2017.
  */
 
-var collProduct = require('../models/product');
-var assert = require("assert");
-var mongoose = require('mongoose');
-var controller = require('../controllers/controller');
-var should = require('should');
-
-mongoose.connect("mongodb://user:1234@ds111461.mlab.com:11461/skjoldmoe").connection;
+const collProduct = require('../models/product');
+const assert = require("assert");
+const mongoose = require('mongoose');
+const controller = require('../controllers/controller');
+const should = require('should');
+const connect = mongoose.connect("mongodb://user:1234@ds111461.mlab.com:11461/skjoldmoe").connection;
 
 describe("Database Manipulation Krav", () => {
     describe("Oprettelsen af produkt virker hvis...", () => {
+
+        afterEach((done) => {
+           collProduct.remove({_id: "13378008"}, done());
+        });
 
         it("Opret og save barcode objekt virker", (done) => {
             controller.createProduct("13378008", "Nuka Cola", false);
