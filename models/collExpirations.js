@@ -12,4 +12,4 @@ var collExpirations = new Schema({
     quantity: Number
 },  {collection: 'collExpirations', versionKey: false});
 
-module.exports = mongoose.model('collExp2', collExpirations);
+module.exports = mongoose.model('collExp', collExpirations);
