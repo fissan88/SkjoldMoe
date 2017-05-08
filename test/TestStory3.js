@@ -13,29 +13,27 @@ describe("Database Manipulation Krav", () => {
     describe("Oprettelsen af produkt virker hvis...", () => {
         var tempId = "";
 
-        afterEach((done) => {
-           collProduct.remove({_id: tempId}, function(err, result) {
-               if(result){
-                   done();
-               } else {
-
-               }
-           });
+        after((done) => {
+            collProduct.remove({_id: "13378008"})
+                .then(collProduct.remove({_id: "1337800811111"}).then(collProduct.remove({_id: "133780081111111"})
+                    .then(done)
+                ));
+            done();
         });
 
-        it("Opret og save barcode objekt virker", (done) => {
+        it("Skulle Oprette et objekt med stregkode på 8 cifre", (done) => {
             tempId = "13378008";
             controller.createProduct(tempId, "Nuka Cola", false);
             done();
         });
 
-        it("Opret objekt med stregkode på 13 karakterer virker", (done) => {
+        it("Skulle Oprette et objekt med stregkode på 13 cifre", (done) => {
             tempId = "1337800811111";
             controller.createProduct(tempId, "Nuka Cola", false);
             done();
         });
 
-        it("Opret objekt med stregkode på 15 karakterer virker", (done) => {
+        it("Skulle Oprette et objekt med stregkode på 15 cifre", (done) => {
             tempId = "133780081111111";
             controller.createProduct(tempId, "Nuka Cola", false);
             done();
@@ -80,6 +78,5 @@ describe("Database Manipulation Krav", () => {
             controller.createProduct.bind(null, tempId, "vareNavn", "").should.throw(Error);
             done();
         });
-
     });
 });
