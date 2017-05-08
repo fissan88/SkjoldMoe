@@ -5,6 +5,7 @@ var controller = require('../controllers/controller');
 var testDate = new Date;
 testDate.setHours(0,0,0,0);
 var testItem;
+var contollerTestitem;
 var testObject = new collExp({
     barcode: "57045399",
     date: testDate,
@@ -62,19 +63,26 @@ describe('Database Manipulation Krav', () => {
 
     describe("CRUD funktionerne i controlleren virker hvis...", (done) => {
         it("Test af create", (done) => {
-              controller.createCollExpiration("5", testDate, 10);
-              done();
+              let tmpItem = controller.createCollExpiration("5", new Date("2017-05-05"), 10);
+
+              if(tmpItem != null){
+                  contollerTestitem = tmpItem;
+                  done();}
+              else done(new Error("Blev ikke oprettet"));
         });
-        it.skip("Test af get", (done) => {
-            controller.getCollExpiration("5", testDate, 10);
-            done();
+        it("Test af get", (done) => {
+            let tmpItems = controller.getCollExpiration("5", contollerTestitem.date, 10);
+
+            //mangler værificering af indhold
+            if(tmpItems != null) done();
+            else done(new Error("Blev ikke fundet"));
         });
-        it.skip("Test af update", (done) => {
-            controller.updateCollExpiration("5", testDate, 10, "200", testDate, 300);
+        it("Test af update", (done) => {
+            controller.updateCollExpiration(contollerTestitem["_id"], "200", testDate, 300);
             done();
         });
         it("Test af delete", (done) => {
-            controller.deleteCollExpiration("5", testDate, 5);
+            controller.deleteCollExpiration(contollerTestitem["_id"]);
             done();
         });
 

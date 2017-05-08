@@ -16,19 +16,30 @@ exports.createCollExpiration = (barcode, date, quantity) => {
 };
 
 exports.getCollExpiration = (barcode, date, quantity) => {
-    return collExp.find({barcode: barcode, date: date, quantity: quantity});
+    // collExp.find({barcode: barcode, quantity: quantity}).where('date').gt(dateFrom).exec((err,docs) => {if(err) throw err; return docs;});
+    collExp.findOne({barcode: barcode, date: date,quantity: quantity}, (err, item) => {
+        if (err) {
+            return err;
+        } else {
+            console.log(item);
+            return item;
+        }
+    });
 };
 
-exports.deleteCollExpiration = (barcode, date, quantity) => {
+exports.deleteCollExpiration = (id) => {
     // collExp.remove({barcode: barcode, date: {
     //     $gte: new Date(date.getDate()),
     //     $lt: date
     // }, quantity: quantity});
 
-    collExp.remove({barcode: barcode, date: date.setHours(0,0,0,0), quantity: quantity});
+    // collExp.findOneAndRemove({barcode: barcode, date: date, quantity: quantity});
+    collExp.findByIdAndRemove(id);
+
 };
 
-exports.updateCollExpiration = (oldBarcode, oldDate, oldQuantity, newBarcode, newDate, newQuantity) => {
-    this.createCollExpiration(newBarcode, newDate, newQuantity);
-    this.deleteCollExpiration(oldBarcode, oldDate, oldQuantity);
+exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
+    // this.createCollExpiration(newBarcode, newDate, newQuantity);
+    // this.deleteCollExpiration(oldBarcode, oldDate, oldQuantity);
+    collExp.findByIdAndUpdate(oldId,{barcode : newBarcode, date : newDate, quantity : newQuantity})
 };
