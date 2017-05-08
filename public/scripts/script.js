@@ -1,7 +1,6 @@
 /**
  * Created by tuxzo on 03-04-2017.
  */
-
 $(document).ready(function() {
 
     function compileNewBody(templateName) {
@@ -31,15 +30,13 @@ $(document).ready(function() {
         compileNewBody("statistik.hbs");
     });
 
-    $('#btnCreateProduct').click(function(){
-        var productName = $('newProductName').val();
-        var productBarcode = $('newProductBarcode').val();
+    $(document).on('click','#btnCreateProduct', function() {
+        console.log("I'm alive");
+        var productName = $('#newProductName').val();
+        var productBarcode = $('#newProductBarcode').val();
+        var isDriedGoods = $('#isDriedGoods').val();
 
-        var msg = {
-            _id: productBarcode,
-            name: productName
-        };
-
+        createProduct(productBarcode, productName, isDriedGoods);
 
     });
 });
