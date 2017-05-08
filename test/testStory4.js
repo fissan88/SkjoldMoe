@@ -81,7 +81,7 @@ describe('Database Manipulation Krav', () => {
             controller.updateCollExpiration(contollerTestitem["_id"], "200", testDate, 300);
             done();
         });
-        it("Test af delete", (done) => {
+        it.skip("Test af delete", (done) => {
             controller.deleteCollExpiration(contollerTestitem["_id"]);
             done();
         });
