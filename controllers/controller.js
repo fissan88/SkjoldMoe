@@ -17,24 +17,20 @@ exports.createCollExpiration = (barcode, date, quantity) => {
     return tmpItem;
 };
 
-exports.getCollExpiration = (date) => {
-
+exports.getCollExpiration = (barcode, date, quantity) => {
+    collExp.findOne({barcode: barcode, date: date, quantity: quantity},'collExpirations', function (err,docs) {
+        if(err) return err;
+        else {
+            return docs;
+        }
+    });
 
 };
 
 exports.deleteCollExpiration = (id) => {
-    // collExp.remove({barcode: barcode, date: {
-    //     $gte: new Date(date.getDate()),
-    //     $lt: date
-    // }, quantity: quantity});
-
-    // collExp.findOneAndRemove({barcode: barcode, date: date, quantity: quantity});
-    // collExp.findByIdAndRemove(id);
     collExp.remove({_id : id});
 };
 
 exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
-    // this.createCollExpiration(newBarcode, newDate, newQuantity);
-    // this.deleteCollExpiration(oldBarcode, oldDate, oldQuantity);
     collExp.findByIdAndUpdate(oldId, {barcode: newBarcode, date: newDate, quantity: newQuantity})
 };

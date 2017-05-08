@@ -21,18 +21,6 @@ describe('Database Manipulation Krav', () => {
         });
 
         it("Objektet er blevet hentet fra databasen", (done) => {
-
-            //
-            // collExp.find({barcode: "57045399", date: testDate,quantity: 5}, (err, item) => {
-            //     if (err) {
-            //         done(err);
-            //     } else {
-            //         testItem = item;
-            //         done();
-            //     }
-            // });
-
-
             collExp.findOne({barcode: "57045399", date: testDate,quantity: 5}, (err, item) => {
                 if (err) {
                     done(err);
@@ -44,7 +32,6 @@ describe('Database Manipulation Krav', () => {
         });
 
         it("Objektet er blevet verificeret", (done) => {
-
                 if (testItem.length == 0) {
                     throw new Error('Item er tomt');
                 } else {
@@ -70,23 +57,8 @@ describe('Database Manipulation Krav', () => {
                   done();}
               else done(new Error("Blev ikke oprettet"));
         });
-        it("Test af get", (done) => {
-            //
-            // //mangler værificering af indhold
-            // if(tmpItems != null) {
-            //     console.log("fik tilbage :");
-            //     console.log(tmpItems);
-            //     done();
-            // }
-            // else {
-            //     console.log("fik tilbage :");
-            //     console.log(tmpItems);
-            //     done(new Error("Blev ikke fundet"));
-            // }
-            // collExp.findOne({barcode: "5", date: contollerTestitem.date, quantity: 10},'collExpirations', function (err,docs) {
-            //     console.log(docs);
-            // });
 
+        it("Test af get", (done) => {
             collExp.findOne({barcode: "5", date: contollerTestitem.date, quantity: 10},'collExpirations', function (err,docs) {
                 if(err) done(err);
                 else {
@@ -95,10 +67,12 @@ describe('Database Manipulation Krav', () => {
                 }
             });
         });
+
         it.skip("Test af update", (done) => {
             controller.updateCollExpiration(contollerTestitem["_id"], "200", testDate, 300);
             done();
         });
+
         it("Test af delete", (done) => {
             // controller.deleteCollExpiration(contollerTestitem["_id"]);
             collExp.remove({_id : contollerTestitem["_id"]});
