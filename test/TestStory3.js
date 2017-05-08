@@ -7,30 +7,51 @@ const assert = require("assert");
 const mongoose = require('mongoose');
 const controller = require('../controllers/controller');
 const should = require('should');
-const connect = mongoose.connect("mongodb://user:1234@ds111461.mlab.com:11461/skjoldmoe").connection;
+
 
 describe("Database Manipulation Krav", () => {
     describe("Oprettelsen af produkt virker hvis...", () => {
+        var tempId = "";
 
         afterEach((done) => {
-           collProduct.remove({_id: "13378008"}, done());
+           collProduct.remove({_id: tempId}, function(err, result) {
+               if(result){
+                   done();
+               } else {
+
+               }
+           });
         });
 
         it("Opret og save barcode objekt virker", (done) => {
-            controller.createProduct("13378008", "Nuka Cola", false);
+            tempId = "13378008";
+            controller.createProduct(tempId, "Nuka Cola", false);
+            done();
+        });
+
+        it("Opret objekt med stregkode på 13 karakterer virker", (done) => {
+            tempId = "1337800811111";
+            controller.createProduct(tempId, "Nuka Cola", false);
+            done();
+        });
+
+        it("Opret objekt med stregkode på 15 karakterer virker", (done) => {
+            tempId = "133780081111111";
+            controller.createProduct(tempId, "Nuka Cola", false);
             done();
         });
 
         it("Objektet er blevet hentet og verificeret fra databasen", (done) => {
-            controller.createProduct("13378008", "Nuka Cola", false);
-            collProduct.find({_id: "13378008"}, (err, item) => {
+            tempId = "13378008";
+            controller.createProduct(tempId, "Nuka Cola", false);
+            collProduct.find({_id: tempId}, (err, item) => {
                 let testitem = item;
                 console.log("Før testItem");
                 console.log(testitem);
                 if (err) {
                     done(err);
                 } else {
-                    assert.equal(item[0]._id, "13378008");
+                    assert.equal(item[0]._id, tempId);
                     assert.equal(item[0].name, "Nuka Cola");
                     done();
                 }
@@ -43,17 +64,20 @@ describe("Database Manipulation Krav", () => {
         });
 
         it("Der ikke kan oprettes vare uden navn", (done) => {
-            controller.createProduct.bind(null, "13378008", "", false).should.throw(Error);
+            tempId = "13378008";
+            controller.createProduct.bind(null, tempId, "", false).should.throw(Error);
             done();
         });
 
         it("Der ikke kan oprettes vare uden isDryGoods", (done) => {
-            controller.createProduct.bind(null, "13378008", "vareNavn", "").should.throw(Error);
+            tempId = "13378008";
+            controller.createProduct.bind(null, tempId, "vareNavn", "").should.throw(Error);
             done();
         });
 
         it("Der kun kan oprettes vare med stregkode på 8 karakterer", (done) => {
-            controller.createProduct.bind(null, "1337800888", "vareNavn", "").should.throw(Error);
+            tempId = "1337800888";
+            controller.createProduct.bind(null, tempId, "vareNavn", "").should.throw(Error);
             done();
         });
 
