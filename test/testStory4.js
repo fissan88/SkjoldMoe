@@ -23,7 +23,7 @@ describe('Database Manipulation Krav', () => {
         it("Objektet er blevet hentet fra databasen", (done) => {
 
             //
-            // collExp.find({barcode: "57045399", date: testDate,quantity: 5}, (err, item) => {
+            // collExp2.find({barcode: "57045399", date: testDate,quantity: 5}, (err, item) => {
             //     if (err) {
             //         done(err);
             //     } else {
@@ -63,7 +63,7 @@ describe('Database Manipulation Krav', () => {
 
     describe("CRUD funktionerne i controlleren virker hvis...", (done) => {
         it("Test af create", (done) => {
-              let tmpItem = controller.createCollExpiration("5", new Date("2017-05-05"), 10);
+              let tmpItem = controller.createCollExpiration("5", new Date("2017-05-08"), 10);
 
               if(tmpItem != null){
                   contollerTestitem = tmpItem;
@@ -77,7 +77,7 @@ describe('Database Manipulation Krav', () => {
             if(tmpItems != null) done();
             else done(new Error("Blev ikke fundet"));
         });
-        it("Test af update", (done) => {
+        it.skip("Test af update", (done) => {
             controller.updateCollExpiration(contollerTestitem["_id"], "200", testDate, 300);
             done();
         });
