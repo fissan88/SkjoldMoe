@@ -19,11 +19,10 @@ app.use(morgan('tiny'));
 app.use(express.static('public'));
 
 // MongdoDB and Mongoose
-// var mongoose = require('mongoose');
+var mongoose = require('mongoose');
 // We pick the default Promise implementation
-// mongoose.Promise = global.Promise;
-// mongoose.connect('mongodb://localhost');
-
+mongoose.Promise = global.Promise;
+mongoose.connect("mongodb://user:1234@ds111461.mlab.com:11461/skjoldmoe").connection;
 // Model
 // var Message = require('./models/message');
 

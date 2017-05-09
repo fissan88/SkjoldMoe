@@ -5,7 +5,7 @@ var collExp = require('../models/collExpirations');
 var mongoose = require('mongoose');
 var testFile = require('../test/testStory4');
 
-mongoose.connect("mongodb://user:1234@ds111461.mlab.com:11461/skjoldmoe").connection;
+
 
 exports.createCollExpiration = (barcode, date, quantity) => {
     let tmpItem = new collExp({
