@@ -3,7 +3,7 @@
  */
 var collExp = require('../models/collExpirations');
 var mongoose = require('mongoose');
-var testFile = require('../test/testStory4');
+
 
 mongoose.connect("mongodb://user:1234@ds111461.mlab.com:11461/skjoldmoe").connection;
 
@@ -18,19 +18,27 @@ exports.createCollExpiration = (barcode, date, quantity) => {
 };
 
 exports.getCollExpiration = (barcode, date, quantity) => {
-    collExp.findOne({barcode: barcode, date: date, quantity: quantity},'collExpirations', function (err,docs) {
+    var query = collExp.findOne({barcode: barcode, date: date, quantity: quantity});
+    return query.exec(function (err,docs) {
         if(err) return err;
         else {
             return docs;
         }
     });
-
 };
 
 exports.deleteCollExpiration = (id) => {
-    collExp.remove({_id : id});
+    collExp.remove({_id : id}, function(err){});
 };
 
 exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
-    collExp.findByIdAndUpdate(oldId, {barcode: newBarcode, date: newDate, quantity: newQuantity})
+
+    var query = collExp.findByIdAndUpdate(oldId, {barcode: newBarcode, date: newDate, quantity: newQuantity}, {new: true});
+    return query.exec(function (err, doc) {
+        if(err) return err;
+        else {
+            return doc;
+        }
+    });
+
 };

@@ -101,3 +101,8 @@ app.set('views', './public/views');
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
 });
+
+var controller = require('./controllers/controller');
+var contollerTestitem = controller.updateCollExpiration("591173c2b40cc202e4115cfb", "200", new Date("2017-05-07"), 300);
+contollerTestitem.then(function(doc){console.log(doc + 1)});
+
