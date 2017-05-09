@@ -21,9 +21,6 @@ describe('collExpirations Model Unit Tests:', () => {
         testItem.save();
         done();
     }));
-    afterEach((done) => {
-    testItem.remove().then(done)
-});
 
     describe('Tester Save Metoden', () => {
         it('Burde kunne save uden problemer', () => {
@@ -53,7 +50,10 @@ describe('collExpirations Model Unit Tests:', () => {
             });
         });
     });
-
+    
+    after((done) => {
+        testItem.remove((done) => {done();});
+    });
 });
 
 
