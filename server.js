@@ -29,8 +29,9 @@ console.log("Connected to database ...");
 // ROUTES FOR OUR APP
 // =============================================================================
 var indexRouter = require('./route/index.js')(express);
+const productRouter = require("./route/products.js")(express);
 app.use(indexRouter);
-
+app.use(productRouter);
 
 
 //     .post(function (req, res) {

@@ -32,11 +32,15 @@ $(document).ready(function() {
 
     $(document).on('click','#btnCreateProduct', function() {
         console.log("I'm alive");
-        var productName = $('#newProductName').val();
-        var productBarcode = $('#newProductBarcode').val();
-        var isDriedGoods = $('#isDriedGoods').val();
 
-        createProduct(productBarcode, productName, isDriedGoods);
+        var newProduct = {
+            _id : $('#newProductBarcode').val(),
+            name : $('#newProductName').val(),
+            isDryGoods : $('#isDryGoods').is(':checked')
+        };
 
+        $.post("/api/products", newProduct, function(data) {
+            alert(data);
+        });
     });
 });
