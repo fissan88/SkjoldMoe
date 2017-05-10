@@ -66,11 +66,5 @@ describe("Database Manipulation Krav", () => {
             controller.createProduct.bind(null, tempId, "", false).should.throw(Error);
             done();
         });
-
-        it("Der kun kan oprettes vare med stregkode på 8 karakterer", (done) => {
-            tempId = "1337800888";
-            controller.createProduct.bind(null, tempId, "vareNavn", "").should.throw(Error);
-            done();
-        });
     });
 });

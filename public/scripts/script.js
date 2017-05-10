@@ -2,14 +2,13 @@
  * Created by tuxzo on 03-04-2017.
  */
 $(document).ready(function() {
-
+// RENDERING OF PAGES
+// =============================================================================
     function compileNewBody(templateName) {
         $.get('../views/' + templateName, function (template) {
             $('#container').empty();
             var compiled = Handlebars.compile(template);
-            var html = compiled({
-
-            });
+            var html = compiled({});
             $('#container').append(html);
         });
     }
@@ -19,7 +18,7 @@ $(document).ready(function() {
     });
 
     $('#btnRegistrer').click(function() {
-         compileNewBody("registrer.hbs");
+        renderRegistrer();
     });
 
     $('#btnKasseret').click(function() {
@@ -30,6 +29,19 @@ $(document).ready(function() {
         compileNewBody("statistik.hbs");
     });
 
+    function renderRegistrer(){
+        compileNewBody("registrer.hbs");
+        $.get('/api/products', (req, res) =>{
+            for(let i in req){
+                $('#wareList').append('<li  id="listItem">' + '<a href="#" data-barcode="'+req[i]._id+'">' + req[i]._id + ' - ' + req[i].name +'' + '</a>' + '</li>');
+            }
+        });
+
+
+    };
+
+// BUTTON ACTIONS
+// =============================================================================
     $(document).on('click','#btnCreateProduct', function() {
         console.log("I'm alive");
 
@@ -42,5 +54,14 @@ $(document).ready(function() {
         $.post("/api/products", newProduct, function(data) {
             alert(data);
         });
+
+        renderRegistrer();
+    });
+
+    $(document).on('click', 'li',(event)=>{
+        console.log($(event.target).data('barcode'));
+        $('#selectedProductBarcode').val($(event.target).data('barcode'));
+
     });
 });
+
