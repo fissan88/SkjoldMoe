@@ -9,7 +9,8 @@ module.exports = function (express) {
     router.route('/api/collExpirations')
         .get((req, res) => {
         //get collexp from values by find
-           res.json(controller.getCollExpiration(req.body.barcode, req.body.date, req.body.quantity));
+        //    res.json(controller.getCollExpiration(req.body.barcode, req.body.date, req.body.quantity));
+            res.json(controller.getAllCollExpirations());
         })
         .post((req, res) => {
         //creates new coll exp
