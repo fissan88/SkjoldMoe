@@ -59,8 +59,8 @@ $(document).ready(function() {
     });
 
     $(document).on('click', 'li',(event)=>{
-        console.log(event.target);
-        $('#selectedProductBarcode').text(event.target.attr('data-barcode'));
+        console.log($(event.target).data('barcode'));
+        $('#selectedProductBarcode').val($(event.target).data('barcode'));
 
     });
 });
