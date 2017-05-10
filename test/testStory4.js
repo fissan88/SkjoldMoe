@@ -1,6 +1,7 @@
 var collExp = require('../models/collExpirations');
 var assert = require("assert");
-var controller = require('../controllers/controller');
+var controller = require('../controllers/controller')
+const app = require('./../server.js');
 
 var testDate = new Date;
 testDate.setHours(0, 0, 0, 0);
