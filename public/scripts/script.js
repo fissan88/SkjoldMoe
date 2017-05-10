@@ -2,12 +2,13 @@
  * Created by tuxzo on 03-04-2017.
  */
 $(document).ready(function() {
+// RENDERING OF PAGES
+// =============================================================================
     function compileNewBody(templateName) {
         $.get('../views/' + templateName, function (template) {
             $('#container').empty();
             var compiled = Handlebars.compile(template);
-            var html = compiled({
-            });
+            var html = compiled({});
             $('#container').append(html);
         });
     }
@@ -27,7 +28,8 @@ $(document).ready(function() {
     $('#btnStatistik').click(function() {
         compileNewBody("statistik.hbs");
     });
-
+// BUTTON ACTIONS
+// =============================================================================
     $(document).on('click','#btnCreateProduct', function() {
         console.log("I'm alive");
 
