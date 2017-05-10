@@ -23,3 +23,13 @@ exports.createProduct = function(id, name, isDryGoods) {
         throw new Error;
     }
 };
+
+exports.updateCollProducts = (oldId, newName, newIsDryGoods) => {
+    var query = collProduct.findByIdAndUpdate(oldId, {name: newName, isDryGoods: newIsDryGoods}, {new: true});
+    return query.exec(function (err, doc) {
+        if (err) return err;
+        else {
+            return doc;
+        }
+    })
+};

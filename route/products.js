@@ -25,6 +25,16 @@ module.exports = (express) => {
                     if (err.stack) console.error(err.stack);
                     res.status(500).send(err);
                 });
+        })
+        .put((req,res) => {
+            var id = req.body._id;
+            var name = req.body.name;
+            var isDryGoods = req.body.isDryGoods;
+
+            controller.updateCollProducts(id, name, isDryGoods)
+                .then(function() {
+                    res.json({message: 'Product updated!'});
+                });
         });
 
     router.route('/api/products/:id')
@@ -32,14 +42,6 @@ module.exports = (express) => {
 
         })
         .post((req, res) => {
-
-        })
-        .put((req,res) => {
-            var id = req.param(id);
-            var name = req.body.name;
-            var isDryGoods = req.body.isDryGoods;
-
-
 
         })
         .delete((req, res) => {
