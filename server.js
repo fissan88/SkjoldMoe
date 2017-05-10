@@ -3,11 +3,12 @@
  */
 'use strict';
 
-var express = require('express');        // call express
-var app = express();                     // define our app using express
-var bodyParser = require('body-parser');
-var morgan = require('morgan');
-var handlebars = require('hbs');
+const express = require('express');        // call express
+const app = express();                     // define our app using express
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
+const handlebars = require('hbs');
 
 // INITIALIZATION
 // =============================================================================
@@ -19,19 +20,20 @@ app.use(morgan('tiny'));
 app.use(express.static('public'));
 
 // MongdoDB and Mongoose
-// var mongoose = require('mongoose');
-// We pick the default Promise implementation
-// mongoose.Promise = global.Promise;
-// mongoose.connect('mongodb://localhost');
+mongoose.connect("mongodb://user:1234@ds111461.mlab.com:11461/skjoldmoe").connection;
+console.log("Connected to database ...");
 
 // Model
 // var Message = require('./models/message');
 
 // ROUTES FOR OUR APP
 // =============================================================================
-var indexRouter = require('./route/index.js')(express);
-var expRouter = require('./route/collExpirations.js')(express);
+const indexRouter = require('./route/index.js')(express);
+const productRouter = require("./route/products.js")(express);
+const expRouter = require('./route/collExpirations.js')(express);
+
 app.use(indexRouter);
+app.use(productRouter);
 app.use(expRouter);
 
 //     .post(function (req, res) {

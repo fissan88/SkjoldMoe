@@ -1,7 +1,6 @@
 /**
  * Created by tuxzo on 03-04-2017.
  */
-
 $(document).ready(function() {
 
     function compileNewBody(templateName) {
@@ -31,4 +30,17 @@ $(document).ready(function() {
         compileNewBody("statistik.hbs");
     });
 
+    $(document).on('click','#btnCreateProduct', function() {
+        console.log("I'm alive");
+
+        var newProduct = {
+            _id : $('#newProductBarcode').val(),
+            name : $('#newProductName').val(),
+            isDryGoods : $('#isDryGoods').is(':checked')
+        };
+
+        $.post("/api/products", newProduct, function(data) {
+            alert(data);
+        });
+    });
 });
