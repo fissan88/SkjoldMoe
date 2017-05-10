@@ -2,13 +2,11 @@
  * Created by tuxzo on 03-04-2017.
  */
 $(document).ready(function() {
-
     function compileNewBody(templateName) {
         $.get('../views/' + templateName, function (template) {
             $('#container').empty();
             var compiled = Handlebars.compile(template);
             var html = compiled({
-
             });
             $('#container').append(html);
         });
@@ -43,4 +41,7 @@ $(document).ready(function() {
             alert(data);
         });
     });
+
+    //Loading af liste på registrer vare
+    $()
 });

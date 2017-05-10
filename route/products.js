@@ -10,8 +10,9 @@ module.exports = (express) => {
 
     router.route('/api/products')
         .get((req, res) => {
-            //get collexp from json element
-
+            collProduct.find({}, (err, docs) => {
+                res.json(docs);
+            });
         })
         .post((req, res) => {
             console.log(req.body._id + " " +  req.body.name + " " + req.body.isDryGoods);
