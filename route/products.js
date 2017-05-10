@@ -35,6 +35,11 @@ module.exports = (express) => {
 
         })
         .put((req,res) => {
+            var id = req.param(id);
+            var name = req.body.name;
+            var isDryGoods = req.body.isDryGoods;
+
+
 
         })
         .delete((req, res) => {

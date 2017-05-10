@@ -36,8 +36,6 @@ $(document).ready(function() {
                 $('#wareList').append('<li  id="listItem">' + '<a href="#" data-barcode="'+req[i]._id+'">' + req[i]._id + ' - ' + req[i].name +'' + '</a>' + '</li>');
             }
         });
-
-
     };
 
 // BUTTON ACTIONS
