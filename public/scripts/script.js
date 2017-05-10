@@ -18,7 +18,7 @@ $(document).ready(function() {
     });
 
     $('#btnRegistrer').click(function() {
-         compileNewBody("registrer.hbs");
+        renderRegistrer();
     });
 
     $('#btnKasseret').click(function() {
@@ -28,6 +28,18 @@ $(document).ready(function() {
     $('#btnStatistik').click(function() {
         compileNewBody("statistik.hbs");
     });
+
+    function renderRegistrer(){
+        compileNewBody("registrer.hbs");
+        $.get('/api/products', (req, res) =>{
+            for(let i in req){
+                $('#wareList').append('<li  id="listItem">' + '<a href="#" data-barcode="'+req[i]._id+'">' + req[i]._id + ' - ' + req[i].name +'' + '</a>' + '</li>');
+            }
+        });
+
+
+    };
+
 // BUTTON ACTIONS
 // =============================================================================
     $(document).on('click','#btnCreateProduct', function() {
@@ -42,8 +54,14 @@ $(document).ready(function() {
         $.post("/api/products", newProduct, function(data) {
             alert(data);
         });
+
+        renderRegistrer();
     });
 
-    //Loading af liste på registrer vare
-    $()
+    $(document).on('click', 'li',(event)=>{
+        console.log(event.target);
+        $('#selectedProductBarcode').text(event.target.attr('data-barcode'));
+
+    });
 });
+
