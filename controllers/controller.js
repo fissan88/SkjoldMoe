@@ -27,8 +27,24 @@ exports.getCollExpiration = (barcode, date, quantity) => {
     });
 };
 
+
+exports.getAllCollExpirations = () => {
+    var query = collExp.find({});
+    return query.exec(function (err,docs) {
+        if(err) return err;
+        else {
+            return docs;
+        }
+    });
+};
+
 exports.deleteCollExpiration = (id) => {
     collExp.remove({_id : id}, function(err){});
+};
+
+exports.getCollExpirationById = (id) => {
+
+    return collExp.findById(id).exec((err,docs) => {if(err) return err; else return docs;});
 };
 
 exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {

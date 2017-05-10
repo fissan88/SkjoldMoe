@@ -2,28 +2,62 @@
  * Created by tuxzo on 08-05-2017.
  */
 var controller = require('../controllers/controller');
-var collExp = require('../models/collExpirations');
 
 module.exports = function (express) {
     var router = express.Router();
 
     router.route('/api/collExpirations')
         .get((req, res) => {
-        //get collexp from json element
+        //get collexp from values by find
            res.json(controller.getCollExpiration(req.body.barcode, req.body.date, req.body.quantity));
         })
         .post((req, res) => {
-            controller.createCollExpiration(req.body.barcode, req.body.date, req.body.quantity);
+        //creates new coll exp
+            const BARCODE_REGEX = /^\d{8}|\d{13}|\d{15}$/;
+            let inputBarcode= req.body.barcode;
+            let inputDate = req.body.date;
+            let inputQuantity = req.body.quantity;
+
+            if(BARCODE_REGEX.test(inputBarcode)){
+                if(inputDate instanceof Date){
+                    if(inputQuantity >= 0){
+                        controller.createCollExpiration(req.body.barcode, req.body.date, req.body.quantity);
+                        res.status(200).json({message : "Object created"});
+                    }
+                }
+            }
+            else res.status(404).json({message: "Something went wrong!"});
+
         });
 
     router.route('/api/collExpirations/:id')
         .get((req, res) => {
-
+        //gets specific collexp by id
+            let tmp = controller.getCollExpirationById(req.params.id);
+            if(tmp.length == 0) res.status(404).json({message : "object not found"});
+            else res.status(200).json(tmp);
         })
-        .post((req, res) => {
+        .put((req, res) => {
+        //updates specific collexp by id
+            const BARCODE_REGEX = /^\d{8}|\d{13}|\d{15}$/;
+            let inputId = req.params.id;
+            let inputBarcode= req.body.barcode;
+            let inputDate = req.body.date;
+            let inputQuantity = req.body.quantity;
+
+            if(BARCODE_REGEX.test(inputBarcode)){
+                if(inputDate instanceof Date){
+                    if(inputQuantity >= 0){
+                        controller.updateCollExpiration(inputId,inputBarcode,inputDate,inputQuantity);
+                        res.status(200).json({message : "Object updated"});
+                    }
+                }
+            }
+            else res.status(404).json({message: "Something went wrong!"});
 
         })
         .delete((req, res) => {
+        //deletes specific collexp by id
             controller.deleteCollExpiration(req.params.id);
         });
     return router;
