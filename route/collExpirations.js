@@ -8,58 +8,63 @@ module.exports = function (express) {
 
     router.route('/api/collExpirations')
         .get((req, res) => {
-        //get collexp from values by find
-        //    res.json(controller.getCollExpiration(req.body.barcode, req.body.date, req.body.quantity));
-            res.json(controller.getAllCollExpirations());
+            //get collexp from values by find
+            //    res.json(controller.getCollExpiration(req.body.barcode, req.body.date, req.body.quantity));
+            res.status(200).json(controller.getAllCollExpirations());
         })
         .post((req, res) => {
-        //creates new coll exp
+            //creates new coll exp
             const BARCODE_REGEX = /^\d{8}|\d{13}|\d{15}$/;
-            let inputBarcode= req.body.barcode;
+            let inputBarcode = req.body.barcode;
             let inputDate = req.body.date;
             let inputQuantity = req.body.quantity;
 
-            if(BARCODE_REGEX.test(inputBarcode)){
-                if(inputDate instanceof Date){
-                    if(inputQuantity >= 0){
+            if (BARCODE_REGEX.test(inputBarcode)) {
+                if (inputDate instanceof Date) {
+                    if (inputQuantity >= 0) {
                         controller.createCollExpiration(req.body.barcode, req.body.date, req.body.quantity);
-                        res.status(200).json({message : "Object created"});
+                        res.status(200).json({message: "Object created"});
                     }
                 }
             }
-            else res.status(404).json({message: "Something went wrong!"});
+            else res.status(500).json({message: "Something went wrong!"});
 
         });
 
     router.route('/api/collExpirations/:id')
         .get((req, res) => {
-        //gets specific collexp by id
+            //gets specific collexp by id
             let tmp = controller.getCollExpirationById(req.params.id);
-            if(tmp.length == 0) res.status(404).json({message : "object not found"});
+            if (tmp.length == 0) res.status(500).json({message: "object not found"});
             else res.status(200).json(tmp);
         })
         .put((req, res) => {
-        //updates specific collexp by id
+            //updates specific collexp by id
             const BARCODE_REGEX = /^\d{8}|\d{13}|\d{15}$/;
             let inputId = req.params.id;
-            let inputBarcode= req.body.barcode;
+            let inputBarcode = req.body.barcode;
             let inputDate = req.body.date;
             let inputQuantity = req.body.quantity;
 
-            if(BARCODE_REGEX.test(inputBarcode)){
-                if(inputDate instanceof Date){
-                    if(inputQuantity >= 0){
-                        controller.updateCollExpiration(inputId,inputBarcode,inputDate,inputQuantity);
-                        res.status(200).json({message : "Object updated"});
+            if (BARCODE_REGEX.test(inputBarcode)) {
+                if (inputDate instanceof Date) {
+                    if (inputQuantity >= 0) {
+                        controller.updateCollExpiration(inputId, inputBarcode, inputDate, inputQuantity);
+                        res.status(200).json({message: "Object updated"});
                     }
                 }
             }
-            else res.status(404).json({message: "Something went wrong!"});
+            else res.status(500).json({message: "Something went wrong!"});
 
         })
         .delete((req, res) => {
-        //deletes specific collexp by id
-            controller.deleteCollExpiration(req.params.id);
+            //deletes specific collexp by id
+            let tmp = controller.deleteCollExpiration(req.params.id);
+            if (tmp == Error) {
+                res.status(500).json({message: "Something went wrong!"})
+            } else {
+                res.status(200).json({message: "Object Removed"})
+            }
         });
     return router;
 };

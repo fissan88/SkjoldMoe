@@ -30,7 +30,9 @@ app.use(express.static('public'));
 // ROUTES FOR OUR APP
 // =============================================================================
 var indexRouter = require('./route/index.js')(express);
+var expRouter = require('./route/collExpirations.js')(express);
 app.use(indexRouter);
+app.use(expRouter);
 
 //     .post(function (req, res) {
 //         var message = new Message({
@@ -102,7 +104,5 @@ app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
 });
 
-var controller = require('./controllers/controller');
-var contollerTestitem = controller.updateCollExpiration("591173c2b40cc202e4115cfb", "200", new Date("2017-05-07"), 300);
-contollerTestitem.then(function(doc){console.log(doc + 1)});
+module.exports = app;
 

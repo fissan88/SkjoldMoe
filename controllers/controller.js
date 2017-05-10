@@ -39,7 +39,11 @@ exports.getAllCollExpirations = () => {
 };
 
 exports.deleteCollExpiration = (id) => {
-    collExp.remove({_id : id}, function(err){});
+    collExp.remove({_id : id}, function(err){
+        if (err) {
+            return err;
+        }
+    });
 };
 
 exports.getCollExpirationById = (id) => {
