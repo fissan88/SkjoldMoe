@@ -27,11 +27,25 @@ module.exports = (express) => {
                 });
         })
         .put((req,res) => {
-            var id = req.body._id;
-            var name = req.body.name;
-            var isDryGoods = req.body.isDryGoods;
+            const BARCODE_REGEX = /^\d{8}|\d{13}|\d{15}$/;
+            let id = req.body._id;
+            let name = req.body.name;
+            let isDryGoods = req.body.isDryGoods;
 
-            controller.updateCollProducts(id, name, isDryGoods);
+            if (BARCODE_REGEX.test(id)) {
+                  if (name != null) {
+                      //toDo: HJÆLP MIG, jeg virker ikke
+                      // if(typeof isDryGoods === "boolean")
+                      // {
+                          console.log("Kalder controller funktionen updateCollProducts");
+                          controller.updateCollProducts(id, name, isDryGoods);
+                          res.status(200).json({message: "Objekt blev opdateret"});
+                      // }
+
+                }
+            }
+            else res.status(500).json({message: "Der gik noget galt"});
+
         });
 
     router.route('/api/products/:id')
