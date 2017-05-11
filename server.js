@@ -28,11 +28,13 @@ console.log("Connected to database ...");
 
 // ROUTES FOR OUR APP
 // =============================================================================
-var indexRouter = require('./route/index.js')(express);
+const indexRouter = require('./route/index.js')(express);
 const productRouter = require("./route/products.js")(express);
+const expRouter = require('./route/collExpirations.js')(express);
+
 app.use(indexRouter);
 app.use(productRouter);
-
+app.use(expRouter);
 
 //     .post(function (req, res) {
 //         var message = new Message({
@@ -103,3 +105,6 @@ app.set('views', './public/views');
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
 });
+
+module.exports = app;
+
