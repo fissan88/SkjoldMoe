@@ -64,13 +64,30 @@ $(document).ready(function() {
         $('#selectedProductBarcode').val($(event.target).data('barcode'));
 
     });
+
+    // Markerer en række på vores liste
+    $(document).on('click', 'table tr', (event)=> {
+        $('tr.active').removeClass('active');
+        $(event.target.parentNode).addClass('active');
+        console.log($(event.target.parentNode).data('id'));
+
+    });
+
+    // TODO skal have opdateret vores varer på listen med en ny glyphicon og antal
+    // tilføjer en rabat til en udløben vare.
+    $(document).on('click', '#btnAccept', (event)=> {
+        let numberOfGoodsOnDiscount = $('#numberInput').val();
+
+        $.put("/api/collExpirations/" + id, newProduct, function(data) {
+            alert(data);
+        });
+    });
 });
 
 function addItemsToExpirationLists(){
     $.get('/api/collExpirations', (req, res) =>{
         for(let i in req){
             var currentDate = new Date;
-            currentDate.setHours(0,0,0,0);
             var month = currentDate.getMonth();
             month = monthConverter(month);
             var currentDateString = currentDate.getFullYear() + '-' + month + '-' + currentDate.getDate();
@@ -79,18 +96,17 @@ function addItemsToExpirationLists(){
             var productDateString = productDate.slice(0,10);
 
             if(productDateString === currentDateString){
-                $.get('/api/products/' + req[i].barcode, (req2, res2) =>{
+                $.get('/api/products/' + req[i].barcode, (product, res2) =>{
                     var onSale = '';
                     if(req[i].isOnSale){
                         onSale=  '<span class="glyphicon glyphicon-ok"></span>';
                     }else onSale=  '<span class="glyphicon glyphicon-remove"></span>';
 
-                    if(req2.isDryGoods){
-                        $('#dryGoods').append('<tr><td>'+req2.name+'</td><td>'+req[i].quantity+'</td><td>'+onSale+'</td></tr>')
+                    if(product.isDryGoods){
+                        $('#dryGoods').append('<tr data-barcode="'+product._id+' " data-id="'+req[i]._id+'"><td>'+product.name+'</td><td>'+req[i].quantity+'</td><td>'+onSale+'</td></tr>')
                     }else{
-                        $('#freshGoods').append('<tr><td>'+req2.name+'</td><td>'+req[i].quantity+'</td><td>'+onSale+'</td></tr>')
+                        $('#freshGoods').append('<tr  data-barcode="'+product._id+'" data-id="'+req[i]._id+'"><td>'+product.name+'</td><td>'+req[i].quantity+'</td><td>'+onSale+'</td></tr>')
                     }
-
                 });
             }
         }
@@ -103,5 +119,4 @@ function addItemsToExpirationLists(){
         }
         return month
     }
-
 }
