@@ -5,13 +5,9 @@
                 <h1 class="panel-title">Nærtudløbne Ferskvarer</h1>
             </div>
             <div class="panel-body">
-                <table>
-                    <tr><td>Navn</td><td>Udløbsdato</td><td>Antal</td></tr>
-                    {{#each vareListe}}
-                        <tr>
-                            <td>{{vareNavn}}</td><td>{{udløbsDato}}</td><td>{{antal}}</td>
-                        </tr>
-                    {{/each}}
+                <table class="table" id="freshGoods">
+                    <tr><td>Navn</td><td>Antal</td><td>Er nedsat</td></tr>
+
                 </table>
             </div>
         </div>
@@ -22,13 +18,9 @@
                 <h1 class="panel-title">Nærtudløbne Tørvarer</h1>
             </div>
             <div class="panel-body">
-                <table>
-                    <tr><td>Navn</td><td>Udløbsdato</td><td>Antal</td></tr>
-                    {{#each vareListe}}
-                        <tr>
-                            <td>{{vareNavn}}</td><td>{{udløbsDato}}</td><td>{{antal}}</td>
-                        </tr>
-                    {{/each}}
+                <table id="dryGoods">
+                    <tr><td>Navn</td><td>Antal</td></tr>
+
                 </table>
             </div>
         </div>

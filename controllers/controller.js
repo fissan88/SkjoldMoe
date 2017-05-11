@@ -82,3 +82,12 @@ exports.createProduct = function(id, name, isDryGoods) {
         throw new Error;
     }
 };
+
+exports.getCollProductById = (id) => {
+
+    var query =  collProduct.findById(id);
+    return query.exec((err,docs) => {
+        if(err) return err;
+        else return docs;
+    });
+};

@@ -69,15 +69,34 @@ $(document).ready(function() {
 function addItemsToExpirationLists(){
     $.get('/api/collExpirations', (req, res) =>{
         for(let i in req){
-            var date = new Date;
-            date.setHours(0,0,0,0);
-            var date2 = date.getFullYear() + '' +date.getMonth() + date.getDate();
-            console.log(req[i]);
-            console.log(req[i].date);
-            console.log(date2);
-            console.log(req[i].date < new Date().getDate());
-            if(req[i].date < new Date()){
+            var currentDate = new Date;
+            currentDate.setHours(0,0,0,0);
+            var month = currentDate.getMonth();
+            month = monthConverter(month);
+            var currentDateString = currentDate.getFullYear() + '-' + month + '-' + currentDate.getDate();
+
+            var productDate = req[i].date;
+            var productDateString = productDate.slice(0,10);
+
+            if(productDateString === currentDateString){
+                $.get('/api/products/' + req[i].barcode, (req2, res2) =>{
+                    if(req2.isDryGoods){
+                        $('#dryGoods').append('<tr><td>'+req2.name+'</td><td>'+req[i].quantity+'</td></tr>')
+                    }else{
+                        $('#freshGoods').append('<tr><td>'+req2.name+'</td><td>'+req[i].quantity+'</td></tr>')
+                    }
+
+                });
             }
         }
     });
+
+    function monthConverter(month) {
+        month = month +1;
+        if(month<10){
+            month = '0' + month;
+        }
+        return month
+    }
+
 }

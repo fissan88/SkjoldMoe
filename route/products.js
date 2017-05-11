@@ -29,6 +29,13 @@ module.exports = (express) => {
 
     router.route('/api/products/:id')
         .get((req, res) => {
+        console.log('pas' + req.params.id)
+            var item = controller.getCollProductById(req.params.id);
+            item.then(function (doc) {
+                if (doc) {
+                    res.status(200).json(doc);
+                } else res.status(418).json('Iam a teapot');
+            })
 
         })
         .post((req, res) => {
