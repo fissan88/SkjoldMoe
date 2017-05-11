@@ -15,6 +15,7 @@ $(document).ready(function() {
 
     $('#btnDatoliste').click(function() {
         compileNewBody("index.hbs");
+        addItemsToExpirationLists();
     });
 
     $('#btnRegistrer').click(function() {
@@ -65,3 +66,18 @@ $(document).ready(function() {
     });
 });
 
+function addItemsToExpirationLists(){
+    $.get('/api/collExpirations', (req, res) =>{
+        for(let i in req){
+            var date = new Date;
+            date.setHours(0,0,0,0);
+            var date2 = date.getFullYear() + '' +date.getMonth() + date.getDate();
+            console.log(req[i]);
+            console.log(req[i].date);
+            console.log(date2);
+            console.log(req[i].date < new Date().getDate());
+            if(req[i].date < new Date()){
+            }
+        }
+    });
+}
