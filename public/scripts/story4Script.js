@@ -28,7 +28,6 @@ var registerExp = (barcode, date, quantity) => {
 };
 
 $(document).ready(function () {
-    // populateExpList();
     $(document).on('click', '#btnCreateExpiration', function () {
 
         let barcode = $('#selectedProductBarcode').val();
