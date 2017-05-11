@@ -13,24 +13,34 @@ var populateExpList = () => {
 };
 
 var registerExp = (barcode, date, quantity) => {
-    $.post('./api/collExpirations/', {'barcode': barcode, 'date': date, 'quantity': quantity})
-        .done(function (data) {
-            console.log(data);
-        }
-            ).fail(alert("Kunne ikke oprette datoregisteringen"))
+    return new Promise((resolve, reject) => {
+        $.post('./api/collExpirations/', {'barcode': barcode, 'date': date, 'quantity': quantity})
+            .done(function (data) {
+                    console.log(data);
+                    resolve();
+                }
+            ).fail(() => {
+            alert("Kunne ikke oprette datoregisteringen");
+            reject();
+        })
+    });
+
 };
 
 $(document).ready(function () {
     // populateExpList();
-    $(document).on('click', '#btnCreateExpiration',function () {
+    $(document).on('click', '#btnCreateExpiration', function () {
 
         let barcode = $('#selectedProductBarcode').val();
         console.log("testStory4 script: selected barcode val: " + barcode);
         let date = $('#expDate').val();
         console.log("testStory4 script: selected barcode val: " + date);
 
-        registerExp(barcode, date, 0);
-        $('#selectedProductBarcode').reset();
-        $('#expDate').reset();
+        registerExp(barcode, date, 0).then(() => {
+            $('#selectedProductBarcode').val('');
+            $('#expDate').val('');
+        });
+
+
     })
 });
