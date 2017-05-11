@@ -2,27 +2,34 @@
  * Created by tuxzo on 03-04-2017.
  */
 
-$(document).ready(function () {
-
 // FUNCTIONS GETTING FROM SERVER
 // =============================================================================
 
-    function registerExp(barcode, date, quantity) {
-        return new Promise((resolve, reject) => {
-            $.post('./api/collExpirations/', {'barcode': barcode, 'date': date, 'quantity': quantity})
-                .done(function (data) {
-                        console.log(data);
-                        resolve();
-                    }
-                ).fail(() => {
-                alert("Kunne ikke oprette datoregisteringen");
-                reject();
-            })
-        });
-    }
+function registerExp(barcode, date, quantity) {
+    return new Promise((resolve, reject) => {
+        $.post('./api/collExpirations/', {'barcode': barcode, 'date': date, 'quantity': quantity})
+            .done(function (data) {
+                    console.log(data);
+                    resolve();
+                }
+            ).fail(() => {
+            alert("Kunne ikke oprette datoregisteringen");
+            reject();
+        })
+    });
+}
+
+function editGoods(barcode, name) {
+    $('#editGoodsModal').modal("show");
+    $('#nameModal').val(name);
+    $('#barcodeModal').val(barcode)
+}
+
+$(document).ready(function () {
 
 // RENDERING OF PAGES
 // =============================================================================
+
     function compileNewBody(templateName) {
         $.get('../views/' + templateName, function (template) {
             $('#container').empty();
@@ -36,11 +43,11 @@ $(document).ready(function () {
         compileNewBody("registrer.hbs");
         $.get('/api/products', (req, res) => {
             for (let i in req) {
-                $('#wareList').append('<li  id="listItem">'
+                let productName = req[i].name;
+                $('#wareList').append('<li id="listItem">'
                     + '<a href="#" data-barcode="' + req[i]._id + '">'
-                    + req[i]._id + ' - '
-                    + req[i].name + ''
-                    + '</a>'
+                    + req[i]._id + ' - ' + req[i].name
+                    + '</a> <div class="glyphicon glyphicon-pencil" id="glyph' + req[i]._id + '" onClick="editGoods(' + req[i]._id + "," + productName + ')"></div>'
                     + '</li>');
             }
         });
@@ -84,7 +91,6 @@ $(document).ready(function () {
     $(document).on('click', 'li', (event) => {
         console.log($(event.target).data('barcode'));
         $('#selectedProductBarcode').val($(event.target).data('barcode'));
-
     });
 
     $(document).on('click', '#btnCreateExpiration', function () {
