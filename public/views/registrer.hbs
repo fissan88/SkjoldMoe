@@ -58,20 +58,27 @@
                 <div class="modal-body" style="position: static">
                     <div class="form-group">
 
+                        <label for="barcode">Stregkode:</label>
+                        <input type="text" class="form-control" id="barcodeModal" disabled="disabled">
+
+                    </div>
+
+                    <div class="form-group">
+
                         <label for="name">Navn:</label>
                         <input type="text" class="form-control" id="nameModal">
 
                     </div>
-                    <div class="form-group">
 
-                        <label for="barcode">Stregkode:</label>
-                        <input type="text" class="form-control" id="barcodeModal">
+                    <label class="checkbox-inline">
 
-                    </div>
+                        <input type="checkbox" value="" id="chbIsDriedGoodsModal">Er tørvare?
+
+                    </label>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-dismiss="modal">Opdater</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" id="btnOpdaterModal">Opdater</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

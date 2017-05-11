@@ -6,8 +6,6 @@ const collProduct = require('../models/product');
 const BARCODE_REGEX = /^\d{8}|\d{13}|\d{15}$/;
 const mongoose = require('mongoose');
 
-
-
 exports.createCollExpiration = (barcode, date, quantity) => {
     let tmpItem = new collExp({
         barcode: barcode,
@@ -48,12 +46,10 @@ exports.deleteCollExpiration = (id) => {
 };
 
 exports.getCollExpirationById = (id) => {
-
     return collExp.findById(id).exec((err,docs) => {if(err) return err; else return docs;});
 };
 
 exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
-
     var query = collExp.findByIdAndUpdate(oldId, {barcode: newBarcode, date: newDate, quantity: newQuantity}, {new: true});
     return query.exec(function (err, doc) {
         if(err) return err;
@@ -61,7 +57,6 @@ exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
             return doc;
         }
     });
-
 };
 
 exports.createProduct = function(id, name, isDryGoods) {
@@ -83,12 +78,34 @@ exports.createProduct = function(id, name, isDryGoods) {
     }
 };
 
-exports.updateCollProducts = (oldId, newName, newIsDryGoods) => {
-    var query = collProduct.findByIdAndUpdate(oldId, {name: newName, isDryGoods: newIsDryGoods}, {new: true});
-    return query.exec(function (err, doc) {
-        if (err) return err;
-        else {
-            return doc;
-        }
-    })
+exports.updateCollProducts = (id, newName, newIsDryGoods) => {
+    // collProduct.find({"_id": oldId}, (error, product) => {
+    //    product.name = newName;
+    //    product.isDryGoods = newIsDryGoods;
+    //
+    //    product.save((err) => {
+    //        if(err) {
+    //            return err;
+    //        }
+    //    })
+    // });
+
+    collProduct.update(
+        { "_id": id },
+        {
+            "_id": id,
+            "name": newName,
+            "isDryGoods": newIsDryGoods
+        },
+        { upsert: true }
+    )
+
+
+    // var query = collProduct.findByIdAndUpdate(oldId, {name: newName, isDryGoods: newIsDryGoods});
+    // return query.exec(function (err, doc) {
+    //     if (err) return err;
+    //     else {
+    //         return doc;
+    //     }
+    // })
 };

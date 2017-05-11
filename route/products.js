@@ -31,10 +31,7 @@ module.exports = (express) => {
             var name = req.body.name;
             var isDryGoods = req.body.isDryGoods;
 
-            controller.updateCollProducts(id, name, isDryGoods)
-                .then(function() {
-                    res.json({message: 'Product updated!'});
-                });
+            controller.updateCollProducts(id, name, isDryGoods);
         });
 
     router.route('/api/products/:id')

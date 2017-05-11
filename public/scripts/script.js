@@ -5,25 +5,61 @@
 // FUNCTIONS GETTING FROM SERVER
 // =============================================================================
 
-function registerExp(barcode, date, quantity) {
-    return new Promise((resolve, reject) => {
-        $.post('./api/collExpirations/', {'barcode': barcode, 'date': date, 'quantity': quantity})
-            .done(function (data) {
-                    console.log(data);
-                    resolve();
-                }
-            ).fail(() => {
-            alert("Kunne ikke oprette datoregisteringen");
-            reject();
-        })
-    });
-}
+    function registerExp(barcode, date, quantity) {
+        return new Promise((resolve, reject) => {
+            $.post('./api/collExpirations/', {'barcode': barcode, 'date': date, 'quantity': quantity})
+                .done(function (data) {
+                        console.log(data);
+                        resolve();
+                    }
+                ).fail(() => {
+                alert("Kunne ikke oprette datoregisteringen");
+                reject();
+            })
+        });
+    }
 
-function editGoods(barcode, name) {
-    $('#editGoodsModal').modal("show");
-    $('#nameModal').val(name);
-    $('#barcodeModal').val(barcode)
-}
+    function editGoods(barcode, name, isDriedGoods) {
+        $('#editGoodsModal').modal("show");
+        $('#nameModal').val(name);
+        $('#barcodeModal').val(barcode);
+
+        if(isDriedGoods) {
+            $('#chbIsDriedGoodsModal').prop('checked', true);
+        }
+
+        $('#btnOpdaterModal').click(() => {
+            if($('#nameModal').val(name) != name || $('#chbIsDriedGoodsModal').is('checked') != isDriedGoods) {
+                updateProduct($('#nameModal').val(name), $('#barcodeModal').val(barcode), $('#chbIsDriedGoodsModal').is('checked'));
+            }
+        })
+    }
+
+    function updateProduct(barcode, name, isDriedGoods) {
+            let updatedProduct = {'_id': barcode, 'name': name, 'isDryGoods': isDriedGoods.toString()};
+
+            $.ajax({
+                type: "PUT",
+                url: "/api/products/",
+                contentType: "json",
+                data: JSON.stringify(updatedProduct)
+            }).done((data) => {
+                alert("Varen blev opdateret");
+                console.log(data);
+            });
+
+
+            // $.put('./api/products/', {'_id': barcode, 'name': name, 'isDryGoods': isDriedGoods})
+            //     .done(function (data) {
+            //             console.log(data);
+            //             resolve();
+            //         }
+            //     ).fail(() => {
+            //     alert("Kunne ikke oprette datoregisteringen");
+            //     reject();
+            // })
+        // });
+    }
 
 $(document).ready(function () {
 
@@ -43,12 +79,14 @@ $(document).ready(function () {
         compileNewBody("registrer.hbs");
         $.get('/api/products', (req, res) => {
             for (let i in req) {
-                let productName = req[i].name;
                 $('#wareList').append('<li id="listItem">'
                     + '<a href="#" data-barcode="' + req[i]._id + '">'
                     + req[i]._id + ' - ' + req[i].name
-                    + '</a> <div class="glyphicon glyphicon-pencil" id="glyph' + req[i]._id + '" onClick="editGoods(' + req[i]._id + "," + productName + ')"></div>'
+                    + '</a> <div class="glyphicon glyphicon-pencil" id="glyph' + req[i]._id + '"></div>'
                     + '</li>');
+                $('#glyph' + req[i]._id).on('click', () => {
+                    editGoods(req[i]._id, req[i].name)
+                });
             }
         });
     }
