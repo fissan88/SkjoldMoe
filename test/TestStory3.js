@@ -16,7 +16,7 @@ describe("Database Manipulation Krav", () => {
         after((done) => {
             collProduct.remove({_id: "13378008"})
                 .then(collProduct.remove({_id: "1337800811111"}).then(collProduct.remove({_id: "133780081111111"})
-                    .then(() => done())
+                    .then(done)
                 ));
             done();
         });
@@ -40,36 +40,31 @@ describe("Database Manipulation Krav", () => {
         });
 
         it("Objektet er blevet hentet og verificeret fra databasen", (done) => {
-
             tempId = "13378008";
-
             controller.createProduct(tempId, "Nuka Cola", false);
-
-            setTimeout(() => {
-                collProduct.find({_id: tempId}, (err, item) => {
-                    if (err) {
-                        done(err);
-                    } else {
-                        assert.equal(item[0]._id, tempId);
-                        assert.equal(item[0].name, "Nuka Cola");
-                        done();
-                    }
-                });
-            }, 5000);
+            collProduct.find({_id: tempId}, (err, item) => {
+                let testitem = item;
+                console.log("Før testItem");
+                console.log(testitem);
+                if (err) {
+                    done(err);
+                } else {
+                    assert.equal(item[0]._id, tempId);
+                    assert.equal(item[0].name, "Nuka Cola");
+                    done();
+                }
+            });
         });
 
         it("Der ikke kan oprettes vare uden id", (done) => {
-            // controller.createProduct.bind(null, "", "vareNavn", false).should.throw(Error);
-            // done();
-
-            controller.createProduct(tempId, "Nuka Cola", false).then( (result) => {
-                expect(result).to.equal(Error);
-            }).then(done, done);
+            controller.createProduct.bind(null, "", "vareNavn", false).should.throw(Error);
+            done();
         });
 
         it("Der ikke kan oprettes vare uden navn", (done) => {
             tempId = "13378008";
-            controller.createProduct.bind(null, tempId, "", false).then(() => done());
+            controller.createProduct.bind(null, tempId, "", false).should.throw(Error);
+            done();
         });
     });
 });
