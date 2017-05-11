@@ -2,7 +2,24 @@
     <div class="col-sm-3">
         <div class="panel panel-success">
             <div class="panel-heading">
-                <h1 class="panel-title">Nærtudløbne Varer</h1>
+                <h1 class="panel-title">Nærtudløbne Ferskvarer</h1>
+            </div>
+            <div class="panel-body">
+                <table>
+                    <tr><td>Navn</td><td>Udløbsdato</td><td>Antal</td></tr>
+                    {{#each vareListe}}
+                        <tr>
+                            <td>{{vareNavn}}</td><td>{{udløbsDato}}</td><td>{{antal}}</td>
+                        </tr>
+                    {{/each}}
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h1 class="panel-title">Nærtudløbne Tørvarer</h1>
             </div>
             <div class="panel-body">
                 <table>
@@ -60,14 +77,5 @@
             </div>
         </div>
         <button type="button" class="btn btn-success btn-block">Godkend</button>
-    </div>
-    <div class="col-sm-3">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h1 class="panel-title">Varebillede</h1>
-            </div>
-            <div class="panel-body">
-            </div>
-        </div>
     </div>
 </div>
