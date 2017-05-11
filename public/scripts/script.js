@@ -80,10 +80,15 @@ function addItemsToExpirationLists(){
 
             if(productDateString === currentDateString){
                 $.get('/api/products/' + req[i].barcode, (req2, res2) =>{
+                    var onSale = '';
+                    if(req[i].isOnSale){
+                        onSale=  '<span class="glyphicon glyphicon-ok"></span>';
+                    }else onSale=  '<span class="glyphicon glyphicon-remove"></span>';
+
                     if(req2.isDryGoods){
-                        $('#dryGoods').append('<tr><td>'+req2.name+'</td><td>'+req[i].quantity+'</td></tr>')
+                        $('#dryGoods').append('<tr><td>'+req2.name+'</td><td>'+req[i].quantity+'</td><td>'+onSale+'</td></tr>')
                     }else{
-                        $('#freshGoods').append('<tr><td>'+req2.name+'</td><td>'+req[i].quantity+'</td></tr>')
+                        $('#freshGoods').append('<tr><td>'+req2.name+'</td><td>'+req[i].quantity+'</td><td>'+onSale+'</td></tr>')
                     }
 
                 });
