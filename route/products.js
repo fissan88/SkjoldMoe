@@ -31,20 +31,16 @@ module.exports = (express) => {
             let id = req.body._id;
             let name = req.body.name;
             let isDryGoods = req.body.isDryGoods;
+            console.log(isDryGoods.constructor.name);
 
             if (BARCODE_REGEX.test(id)) {
-                  if (name != null) {
-                      //toDo: HJÆLP MIG, jeg virker ikke
-                      // if(typeof isDryGoods === "boolean")
-                      // {
+                  if (name.length > 0) {
                           console.log("Kalder controller funktionen updateCollProducts");
                           controller.updateCollProducts(id, name, isDryGoods);
-                          res.status(200).json({message: "Objekt blev opdateret"});
-                      // }
-
+                          res.status(200).json({message: "Produktet blev opdateret"});
                 }
             }
-            else res.status(500).json({message: "Der gik noget galt"});
+            else res.status(500).json({message: "Der gik noget galt ..."});
 
         });
 
