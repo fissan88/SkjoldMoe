@@ -34,7 +34,7 @@ module.exports = (express) => {
             console.log(isDryGoods.constructor.name);
 
             if (BARCODE_REGEX.test(id)) {
-                  if (name.length > 0) {
+                  if (name !== null) {
                           console.log("Kalder controller funktionen updateCollProducts");
                           controller.updateCollProducts(id, name, isDryGoods);
                           res.status(200).json({message: "Produktet blev opdateret"});
