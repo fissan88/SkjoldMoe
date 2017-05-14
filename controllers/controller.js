@@ -80,19 +80,6 @@ exports.createProduct = function(id, name, isDryGoods) {
 
 exports.updateCollProducts = (id, newName, newIsDryGoods) => {
 
-    //toDo: HJÆLP MIG, jeg er fyldt med udkommenterede spøgelser
-
-    // collProduct.find({"_id": id}, (error, product) => {
-    //    product.name = newName;
-    //    product.isDryGoods = newIsDryGoods;
-    //
-    //    product.save((err) => {
-    //        if(err) {
-    //            return err;
-    //        }
-    //    })
-    // });
-
     collProduct.findOne({ _id: id }, function (err, doc){
         doc.name = newName;
         doc.isDryGoods = newIsDryGoods;
@@ -103,22 +90,4 @@ exports.updateCollProducts = (id, newName, newIsDryGoods) => {
                })
     });
 
-    // collProduct.update(
-    //     { "_id": id },
-    //     {
-    //         "_id": id,
-    //         "name": newName,
-    //         "isDryGoods": newIsDryGoods
-    //     },
-    //     { upsert: true }
-    // )
-
-
-    // var query = collProduct.findByIdAndUpdate(oldId, {name: newName, isDryGoods: newIsDryGoods});
-    // return query.exec(function (err, doc) {
-    //     if (err) return err;
-    //     else {
-    //         return doc;
-    //     }
-    // })
 };
