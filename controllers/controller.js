@@ -65,22 +65,22 @@ exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
 };
 
 exports.createProduct = function (id, name, isDryGoods) {
-    if (name.length > 0
-        && typeof(id) === 'string'
-        && BARCODE_REGEX.test(id)) {
+    return new Promise ((resolve, reject) => { 
+        if (name.length > 0
+            && typeof(id) === 'string'
+            && BARCODE_REGEX.test(id)) {
 
-        let newProduct = new collProduct({
-            _id: id,
-            name: name,
-            isDryGoods: isDryGoods
-        });
+            let newProduct = new collProduct({
+                _id: id,
+                name: name,
+                isDryGoods: isDryGoods
+            });
 
-        newProduct.save().then(() => {
-            resolve();
-        });
-    } else {
-        throw new Error;
-    }
+            newProduct.save().then(resolve);
+        } else {
+           reject();
+        }
+    });
 };
 
 exports.updateCollProducts = (id, newName, newIsDryGoods) => {
