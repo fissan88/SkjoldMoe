@@ -13,15 +13,16 @@ function compileNewBody(templateName) {
     });
 }
 
-function renderRegistrer() {
-    compileNewBody("registrer.hbs");
+function populateSortimentList() {
     $.get('/api/products', (req, res) => {
         for (let i in req) {
-            $('#wareList').append('<li id="listItem">'
-                + '<a href="#" data-barcode="' + req[i]._id + '">'
-                + req[i]._id + ' - ' + req[i].name
-                + '</a> <div class="glyphicon glyphicon-pencil" id="glyph' + req[i]._id + '"></div>'
-                + '</li>');
+            $('#stockList').append('<li class="list-group-item">'
+                    + '<label>'+req[i]._id + ' - ' + req[i].name+'</label>'
+                    + '<div class="pull-right action-buttons">'
+                    + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-pencil" id="glyph' + req[i]._id + '"></span></a>'
+                    + '<a href="#" class="trash"><span class="glyphicon glyphicon-trash"></span></a>'
+                    + '</div></li>');
+
             $('#glyph' + req[i]._id).on('click', () => {
                 editGoods(req[i]._id, req[i].name, req[i].isDryGoods);
             });
@@ -77,7 +78,7 @@ function updateProduct(barcode, name, isDryGoods) {
         data: JSON.stringify(updatedProduct)
     }).done(() => {
         alert("Varen blev opdateret succesfuldt.");
-        renderRegistrer();
+        populateSortimentList();
     });
 }
 
@@ -89,8 +90,7 @@ $(document).ready(function () {
     function toggleButtons() {
         $('#btnDatoliste').removeClass('active');
         $('#btnRegistrer').removeClass('active');
-        $('#btnKasseret').removeClass('active');
-        $('#btnStatistik').removeClass('active');
+        $('#btnSortiment').removeClass('active');
     }
 
     $('#btnDatoliste').click(function () {
@@ -100,21 +100,17 @@ $(document).ready(function () {
     });
 
     $('#btnRegistrer').click(function () {
-        renderRegistrer();
+        compileNewBody("registrer.hbs");
+        populateSortimentList();
         toggleButtons();
         $('#btnRegistrer').addClass('active');
     });
 
-    $('#btnKasseret').click(function () {
-        compileNewBody("kasseret.hbs");
+    $('#btnSortiment').click(function () {
+        compileNewBody("sortiment.hbs");
+        populateSortimentList();
         toggleButtons();
-        $('#btnKasseret').addClass('active');
-    });
-
-    $('#btnStatistik').click(function () {
-        compileNewBody("statistik.hbs");
-        toggleButtons();
-        $('#btnStatistik').addClass('active');
+        $('#btnSortiment').addClass('active');
     });
 
     $(document).on('click', '#btnCreateProduct', function () {
@@ -127,7 +123,7 @@ $(document).ready(function () {
         $.post("/api/products", newProduct, function (data) {
             alert(data);
         }).done(() => {
-            renderRegistrer();
+            populateSortimentList();
         });
     });
 
