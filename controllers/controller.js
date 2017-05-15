@@ -65,7 +65,7 @@ exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
 };
 
 exports.createProduct = function (id, name, isDryGoods) {
-    return new Promise ((resolve, reject) => { 
+    return new Promise ((resolve, reject) => {
         if (name.length > 0
             && typeof(id) === 'string'
             && BARCODE_REGEX.test(id)) {
