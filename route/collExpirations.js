@@ -10,7 +10,7 @@ module.exports = function (express) {
         .get((req, res) => {
             //get collexp from values by find
             //    res.json(controller.getCollExpiration(req.body.barcode, req.body.date, req.body.quantity));
-            var items = controller.getAllCollExpirations()
+            var items = controller.getAllCollExpirations();
             items.then(function (doc){
                 items = doc;
                 if (items) {

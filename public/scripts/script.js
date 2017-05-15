@@ -72,13 +72,14 @@ $(document).ready(function() {
     });
 
     // TODO skal have opdateret vores varer på listen med en ny glyphicon og antal
-    // tilføjer en rabat til en udløben vare.
-    $(document).on('click', '#btnAccept', (event)=> {
-        let numberOfGoodsOnDiscount = $('#numberInput').val();
-
-        $.put("/api/collExpirations/" + id, newProduct, function(data) {
-            alert(data);
-        });
+    // gemmer det nye antal af varer
+    $(document).on('click', '#saveBtn', (event)=> {
+        alert("CLICKED");
+        // let numberOfGoodsOnDiscount = $('#numberInput').val();
+        //
+        // $.put("/api/collExpirations/" + id, newProduct, function(data) {
+        //     alert(data);
+        // });
     });
 });
 
@@ -95,18 +96,11 @@ function addItemsToExpirationLists(){
 
             if(productDateString === currentDateString){
                 $.get('/api/products/' + req[i].barcode, (product, res2) =>{
-                    var onSale = '';
-                    if(req[i].isOnSale){
-                        onSale=  '<span class="glyphicon glyphicon-ok"></span>';
-                    }else onSale=  '<span class="glyphicon glyphicon-remove"></span>';
-
                     var listLocation = 'fresh';
                     if(product.isDryGoods){
                         listLocation = 'dry';
                     }
-
-                    $('#' + listLocation + 'Goods').append('<tr  data-barcode="'+product._id+'" data-id="'+req[i]._id+'"><td>'+product.name+'</td><td><input id="numSelect" type="number"></td><td>'+onSale+'</td></tr>')
-
+                    $('#' + listLocation + 'Goods').append('<tr  data-barcode="'+product._id+'" data-id="'+req[i]._id+'"><td>'+product.name+'</td><td><input id="numSelect" type="number"></td><td><span id="saveBtn" class="glyphicon glyphicon-floppy-disk"></span></td></tr>')
                 });
             }
         }
