@@ -14,6 +14,8 @@ function compileNewBody(templateName) {
 }
 
 function populateSortimentList() {
+    $('#stockList').empty();
+
     $.get('/api/products', (req, res) => {
         for (let i in req) {
             $('#stockList').append('<li class="list-group-item">'
@@ -114,6 +116,7 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '#btnCreateProduct', function () {
+
         let newProduct = {
             _id: $('#newProductBarcode').val(),
             name: $('#newProductName').val(),
@@ -121,8 +124,11 @@ $(document).ready(function () {
         };
 
         $.post("/api/products", newProduct, function (data) {
-            alert(data);
+            alert("Varen blev oprettet succesfuldt!");
         }).done(() => {
+            $('#newProductBarcode').val("");
+            $('#newProductName').val("");
+            $('#isDryGoods').prop('checked', false);
             populateSortimentList();
         });
     });
