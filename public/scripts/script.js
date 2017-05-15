@@ -100,11 +100,13 @@ function addItemsToExpirationLists(){
                         onSale=  '<span class="glyphicon glyphicon-ok"></span>';
                     }else onSale=  '<span class="glyphicon glyphicon-remove"></span>';
 
+                    var listLocation = 'fresh';
                     if(product.isDryGoods){
-                        $('#dryGoods').append('<tr data-barcode="'+product._id+' " data-id="'+req[i]._id+'"><td>'+product.name+'</td><td>'+req[i].quantity+'</td><td>'+onSale+'</td></tr>')
-                    }else{
-                        $('#freshGoods').append('<tr  data-barcode="'+product._id+'" data-id="'+req[i]._id+'"><td>'+product.name+'</td><td>'+req[i].quantity+'</td><td>'+onSale+'</td></tr>')
+                        listLocation = 'dry';
                     }
+
+                    $('#' + listLocation + 'Goods').append('<tr  data-barcode="'+product._id+'" data-id="'+req[i]._id+'"><td>'+product.name+'</td><td><input id="numSelect" type="number"></td><td>'+onSale+'</td></tr>')
+
                 });
             }
         }
