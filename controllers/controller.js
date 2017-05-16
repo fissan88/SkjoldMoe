@@ -143,3 +143,21 @@ exports.getCollProductById = (id) => {
         else return docs;
     });
 };
+
+
+//TODO: sender en liste med expirations fra i dag / ligger lige nu i script på klientsiden
+exports.getExpToday = (inputDate) =>{
+    let query = collExp.find({date: { $gt: inputDate}});
+    return query.exec(function (err, docs) {
+        if (err) return err;
+        else {
+            console.log(docs);
+            return docs;
+        }
+    });
+};
+
+//TODO: sender en liste med produkter/vare fra i dag
+exports.getProductsToday = () =>{
+
+};

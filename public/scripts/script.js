@@ -173,6 +173,13 @@ $(document).ready(function () {
         $('#btnSortiment').addClass('active');
     });
 
+    $(document).on('click', '#testButtonDateReg', () => {
+        $.get('/api/collExpirations/today', (req, res) =>{
+            for(let i in req){
+                console.log(req[i].constructor.name);
+            }});
+        $('#dateRegModal').modal("show")});
+
     // TODO skal have opdateret vores varer på listen med en ny glyphicon og antal
     // gemmer det nye antal af varer
     $(document).on('click', '#saveBtn', (event)=> {

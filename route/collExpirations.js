@@ -77,5 +77,18 @@ module.exports = function (express) {
                 res.status(200).json({message: "Objekt blev slettet"})
             }
         });
+
+    router.route('/api/collExpirations/today')
+        .get((req, res) => {
+            //gets expirations from today
+            let inputDate = new Date();
+            inputDate.setDate(inputDate.getDate()-1);
+            let item = controller.getExpToday(inputDate);
+            item.then(function (doc) {
+                if (doc) {
+                    res.status(200).json(doc);
+                } else res.status(418).json('Iam a teapot');
+            })
+        });
     return router;
 };

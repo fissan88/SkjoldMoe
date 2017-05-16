@@ -64,5 +64,16 @@ module.exports = (express) => {
                 res.status(200).json({message: "Varen blev slettet succesfuldt."});
             }
         });
+
+    router.route('/api/products/today')
+        .get((req, res) => {
+            //gets products with expirations from today
+            let item = controller.getProductsToday();
+            item.then(function (doc) {
+                if (doc) {
+                    res.status(200).json(doc);
+                } else res.status(418).json('Iam a teapot');
+            })
+        });
     return router;
 };
