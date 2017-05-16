@@ -18,12 +18,22 @@ function populateSortimentList() {
 
     $.get('/api/products', (req, res) => {
         for (let i in req) {
-            $('#stockList').append('<li class="list-group-item">'
-                    + '<label>'+req[i]._id + ' - ' + req[i].name+'</label>'
-                    + '<div class="pull-right action-buttons">'
+            $('#stockList').append('<div class="list-group-item list-group-item-action flex-column align-items-start">'
+                    + ' <div class="d-flex w-100 justify-content-between">'
+                    + '<h5 class="mb-1">'
+                    + '<strong>Stregkode - Navn:</strong> <br>'
+                    +  req[i]._id + ' - ' + req[i].name
+                    + '</h5>'
+                    + '<small class="text-muted pull-right action-buttons">'
                     + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-pencil" id="glyphEdit' + req[i]._id + '"></span></a>'
                     + '<a href="#" data-barcode="' + req[i]._id + '"><span  class="glyphicon glyphicon-trash" id="glyphDelete' + req[i]._id + '"></span></a>'
-                    + '</div></li>');
+                    + '</small>'
+                    + '</div>'
+                    + '<p>'
+                    + '<strong>Bestillingsnummer:</strong> <br>'
+                    +  req[i].orderNumber
+                    + '</p>'
+                    + '</li></div>');
 
             $('#glyphEdit' + req[i]._id).on('click', () => {
                 editGoods(req[i]._id, req[i].name, req[i].isDryGoods);
@@ -198,6 +208,7 @@ $(document).ready(function () {
         let newProduct = {
             _id: $('#newProductBarcode').val(),
             name: $('#newProductName').val(),
+            orderNumber: $('#newProductOrderNumber').val(),
             isDryGoods: $('#isDryGoods').is(':checked')
         };
 
@@ -206,6 +217,7 @@ $(document).ready(function () {
         }).done(() => {
             $('#newProductBarcode').val("");
             $('#newProductName').val("");
+            $('#newProductOrderNumber').val("");
             $('#isDryGoods').prop('checked', false);
             populateSortimentList();
         });

@@ -104,7 +104,7 @@ exports.updateQuantityCollExpiration = (id, quantity, isChecked) => {
     });
 };
 
-exports.createProduct = function (id, name, isDryGoods) {
+exports.createProduct = function (id, name, isDryGoods, orderNumber) {
     return new Promise ((resolve, reject) => {
         if (name.length > 0
             && typeof(id) === 'string'
@@ -113,7 +113,8 @@ exports.createProduct = function (id, name, isDryGoods) {
             let newProduct = new collProduct({
                 _id: id,
                 name: name,
-                isDryGoods: isDryGoods
+                isDryGoods: isDryGoods,
+                orderNumber: orderNumber
             });
 
             newProduct.save().then(resolve);
