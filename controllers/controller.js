@@ -37,11 +37,38 @@ exports.getAllCollExpirations = () => {
 };
 
 exports.deleteCollExpiration = (id) => {
-    collExp.remove({_id: id}, function (err) {
-        if (err) {
-            return err;
+    collExp.findOne({_id: id}, function (err, doc) {
+        doc.remove((err) => {
+            if (err) {
+                return err;
+            }
+        })
+    });
+};
+
+function deleteExpirationsByBarcode(barcode) {
+    let query = collExp.find({barcode: barcode});
+    return query.exec(function (err, docs) {
+        if (err) return err;
+        else {
+            for(let i = 0; i < docs.length; i++) {
+                docs[i].remove();
+            }
         }
     });
+}
+
+exports.deleteProduct = (id) => {
+    deleteExpirationsByBarcode(id);
+
+    collProduct.findOne({_id: id}, function (err, doc) {
+        doc.remove((err) => {
+            if (err) {
+                return err;
+            }
+        })
+    });
+
 };
 
 exports.getCollExpirationById = (id) => {
