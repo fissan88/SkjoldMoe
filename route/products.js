@@ -68,10 +68,15 @@ module.exports = (express) => {
     router.route('/api/productsToday')
         .get((req, res) => {
             //getter produkter der skal registreres i dag
+            let getPro = controller.getProductsToday();
+            getPro.then((docs) => {
+                if(docs) {
+                    res.status(200).json(docs);
+                } else {
+                    res.status(418).json('I am a teapot');
+                }
+            });
 
-            let productsToday = controller.getProductsToday();
-            console.log(controller.getProductsToday());
-            res.status(200).json(productsToday);
         });
     return router;
 };

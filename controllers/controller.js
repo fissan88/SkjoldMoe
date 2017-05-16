@@ -158,42 +158,34 @@ exports.getExpToday = (inputDate) => {
 
 //TODO: sender en liste med produkter/vare fra i dag
 exports.getProductsToday = () => {
+    return new Promise((resolve, reject) => {
+
+
     let tempArr = [];
-    let todaysProducts = [];
     let inputDate = new Date();
     inputDate.setUTCHours(0, 0, 0, 0);
-
     let query = collExp.find({date: inputDate});
+
     query.exec(function (err, docs) {
         return docs;
     }).then((docs) => {
         return new Promise((resolve, reject) => {
-
             for (let i = 0; i < docs.length; i++) {
-                // if(!tempArr.indexOf(todaysExpirations[i])) {
                 tempArr.push(docs[i].barcode);
             }
             resolve();
         })
     }).then(() => {
         return new Promise((resolve, reject) => {
-            for (let i = 0; i < tempArr.length; i++) {
-                console.log("Kalder findone med: " + tempArr[i]);
-                let query = collProduct.findOne({_id: tempArr[i]});
-                query.exec(function (err, doc) {
-                    if (!err && doc != null) {
-                        console.log("Fandt: " + doc);
-                        todaysProducts.push(doc);
-                    }
-                });
-            };
-            console.log("lige før resolve :" + tempArr.length);
-            resolve();
-
+            let query = collProduct.find({_id: tempArr});
+            query.exec(function (err, docs) {
+                if (err) {
+                    return err;
+                } else resolve(docs);
+            });
         })
-    }).then(() => {
-        console.log("For loop med populate todaysProducts overstået, indeholder nu: " + todaysProducts);
-        return todaysProducts;
-    })
-
+    }).then((docs) => {
+        resolve(docs);
+    });
+    });
 };
