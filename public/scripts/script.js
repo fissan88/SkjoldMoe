@@ -125,6 +125,7 @@ function addItemsToExpirationLists(){
 
 
 $(document).ready(function () {
+    addItemsToExpirationLists();
 
 // BUTTON ACTIONS
 // =============================================================================
