@@ -64,6 +64,18 @@ exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
     });
 };
 
+exports.updateQuantityCollExpiration = (id, quantity) => {
+    var query = collExp.findByIdAndUpdate(id, {
+        quantity: quantity
+    }, {new: true});
+    return query.exec(function (err, doc) {
+        if (err) return err;
+        else {
+            return doc;
+        }
+    });
+};
+
 exports.createProduct = function (id, name, isDryGoods) {
     return new Promise ((resolve, reject) => {
         if (name.length > 0

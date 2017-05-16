@@ -101,12 +101,19 @@ function addItemsToExpirationLists(){
                     if(product.isDryGoods){
                         listLocation = 'dry';
                     }
-                    $('#' + listLocation + 'Goods').append('<tr  data-barcode="'+product._id+'" data-id="'+req[i]._id+'"><td>'+product.name+'</td><td><input id="numSelect" type="number"></td><td><span id="saveBtn" class="glyphicon glyphicon-floppy-disk"></span></td></tr>')
+                    var quantity = req[i].quantity;
+                    var okGlyphicon = '';
+                    if(quantity == 0){
+                        quantity = '';
+                    }else {
+                        quantity = 'value =' + quantity;
+                        okGlyphicon = '<span id="saveBtn" class="glyphicon glyphicon-ok"></span>';
+                    }
+                    $('#' + listLocation + 'Goods').append('<tr  data-barcode="'+product._id+'" data-id="'+req[i]._id+'"><td>'+product.name+'</td><td><input id="numSelect" type="number" '+quantity+'></td><td><span id="saveBtn" class="glyphicon glyphicon-floppy-disk"></span>'+okGlyphicon+'</td></tr>')
                 });
             }
         }
     });
-
     function monthConverter(month) {
         month = month +1;
         if(month<10){
@@ -114,6 +121,8 @@ function addItemsToExpirationLists(){
         }
         return month
     }
+};
+
 
 $(document).ready(function () {
 
@@ -130,6 +139,7 @@ $(document).ready(function () {
         compileNewBody("index.hbs");
         toggleButtons();
         $('#btnDatoliste').addClass('active');
+        addItemsToExpirationLists();
     });
 
     $('#btnRegistrer').click(function () {
@@ -146,25 +156,25 @@ $(document).ready(function () {
         $('#btnSortiment').addClass('active');
     });
 
-    // Markerer en række på vores liste
-    $(document).on('click', 'table tr', (event)=> {
-        $('tr.active').removeClass('active');
-        $(event.target.parentNode).addClass('active');
-        console.log($(event.target.parentNode).data('id'));
-
-    });
-
     // TODO skal have opdateret vores varer på listen med en ny glyphicon og antal
     // gemmer det nye antal af varer
     $(document).on('click', '#saveBtn', (event)=> {
-        alert("CLICKED");
-        // let numberOfGoodsOnDiscount = $('#numberInput').val();
-        //
-        // $.put("/api/collExpirations/" + id, newProduct, function(data) {
-        //     alert(data);
-        // });
+
+        var id = $(event.target.parentNode.parentNode).data('id');
+        var quantity = $(event.target.parentNode.previousSibling.firstChild).val();
+
+        $.ajax({
+            type: "PUT",
+            url: "/api/collExpirations/" + id,
+            contentType: "application/json",
+            data: JSON.stringify({quantity: quantity})
+        }).done(() => {
+            if(!$(event.target.parentNode.lastChild).hasClass("glyphicon glyphicon-ok")){
+                $(event.target.parentNode).append('<span id="saveBtn" class="glyphicon glyphicon-ok"></span>');
+            }
+        });
+
     });
-});
 
     $(document).on('click', '#btnCreateProduct', function () {
 
@@ -198,5 +208,6 @@ $(document).ready(function () {
             $('#selectedProductBarcode').val('');
             $('#expDate').val('');
         });
-    })
+    });
 });
+

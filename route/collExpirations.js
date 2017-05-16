@@ -54,7 +54,10 @@ module.exports = function (express) {
             let inputDate = req.body.date;
             let inputQuantity = req.body.quantity;
 
-            if (BARCODE_REGEX.test(inputBarcode)) {
+            if(!inputBarcode){
+                controller.updateQuantityCollExpiration(inputId, inputQuantity);
+                res.status(200).json({message: "Objekt blev opdateret"});
+            }else if (BARCODE_REGEX.test(inputBarcode)) {
                 if (inputDate instanceof Date) {
                     if (inputQuantity >= 0) {
                         controller.updateCollExpiration(inputId, inputBarcode, inputDate, inputQuantity);
