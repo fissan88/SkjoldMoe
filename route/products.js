@@ -46,7 +46,6 @@ module.exports = (express) => {
 
     router.route('/api/products/:id')
         .get((req, res) => {
-        console.log('pas' + req.params.id)
             var item = controller.getCollProductById(req.params.id);
             item.then(function (doc) {
                 if (doc) {
