@@ -173,6 +173,7 @@ $(document).ready(function () {
             if(!$(event.target.parentNode.lastChild).hasClass("glyphicon glyphicon-ok")){
                 $(event.target.parentNode).append('<span id="saveBtn" class="glyphicon glyphicon-ok"></span>');
             }
+                $(event.target.parentNode.parentNode).fadeTo('slow', 0.5).fadeTo('slow', 1.0);
         });
 
     });
