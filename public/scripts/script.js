@@ -19,14 +19,18 @@ function populateSortimentList() {
     $.get('/api/products', (req, res) => {
         for (let i in req) {
             $('#stockList').append('<li class="list-group-item">'
-                + '<label>'+req[i]._id + ' - ' + req[i].name+'</label>'
-                + '<div class="pull-right action-buttons">'
-                + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-pencil" id="glyph' + req[i]._id + '"></span></a>'
-                + '<a href="#" class="trash"><span class="glyphicon glyphicon-trash"></span></a>'
-                + '</div></li>');
+                    + '<label>'+req[i]._id + ' - ' + req[i].name+'</label>'
+                    + '<div class="pull-right action-buttons">'
+                    + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-pencil" id="glyphEdit' + req[i]._id + '"></span></a>'
+                    + '<a href="#" data-barcode="' + req[i]._id + '"><span  class="trash" id="glyphDelete' + req[i]._id + '"><span class="glyphicon glyphicon-trash"></span></a>'
+                    + '</div></li>');
 
             $('#glyph' + req[i]._id).on('click', () => {
                 editGoods(req[i]._id, req[i].name, req[i].isDryGoods);
+            });
+
+            $('#glyphDelete' + req[i]._id).on('click', () => {
+                deleteGoods(req[i]._id);
             });
         }
     });
@@ -69,6 +73,18 @@ function editGoods(barcode, name, isDryGoods) {
             updateProduct($('#barcodeModal').val(), $('#nameModal').val(), $('#chbIsDryGoodsModal').is(':checked'));
         }
     })
+}
+
+function deleteGoods(barcode) {
+    if (window.confirm("Vil du virkelig slette " + barcode + "?")) {
+        $.ajax({
+            type: "DELETE",
+            url: "/api/products/" + barcode,
+        }).done(() => {
+            alert("Varen blev slettet.");
+            populateSortimentList();
+        });
+    }
 }
 
 function updateProduct(barcode, name, isDryGoods) {
@@ -211,4 +227,3 @@ $(document).ready(function () {
         });
     });
 });
-

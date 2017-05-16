@@ -58,7 +58,11 @@ module.exports = (express) => {
 
         })
         .delete((req, res) => {
-            controller.deleteCollExpiration(req.params.id);
+            if(controller.deleteProduct(req.params.id)) {
+                res.status(500);
+            } else {
+                res.status(200).json({message: "Varen blev slettet succesfuldt."});
+            }
         });
     return router;
 };

@@ -36,65 +36,6 @@ app.use(indexRouter);
 app.use(productRouter);
 app.use(expRouter);
 
-//     .post(function (req, res) {
-//         var message = new Message({
-//             time: Date.now(),
-//             msg: req.body.msg,
-//             name: req.body.name
-//         });
-//
-//         message.printMsg();
-//         message.save(function (err) {
-//             if(err) {
-//                 res.status(500);
-//                 res.send(err);
-//             } else {
-//                 res.json({msg: "message saved!"});
-//             }
-//         })
-//
-//     })
-//     .delete(function (req, res)
-//     {
-//         Message.remove(function(err){
-//             if(err){
-//                 res.status(500);
-//                 res.send(err);
-//             } else {
-//                 res.json({msg: "all messages deleted!"});
-//             }
-//         });
-//     });
-//
-// router.route('/message/:id')
-//     .get(function (req, res) {
-//         var id = req.params.id;
-//         Message.find({_id: id},function (err,msg) {
-//             if(err){
-//                 res.send(err);
-//             }
-//             else{
-//                 res.json(msg);
-//             }
-//         })
-//     })
-//
-//     .delete(function (req, res)
-//     {
-//         var id = req.params.id;
-//         Message.findOneAndRemove({_id: id}, function(err) {
-//             if (err) {
-//                 res.status(500);
-//                 res.send(err);
-//             } else {
-//                 res.json({msg: "message deleted!"});
-//             }
-//         })
-//
-//     }) ;
-
-
-
 //Setup views
 app.set('view engine', 'hbs');
 app.set('views', './public/views');
