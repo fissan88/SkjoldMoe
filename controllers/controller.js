@@ -144,3 +144,12 @@ exports.getCollProductById = (id) => {
         else return docs;
     });
 };
+
+exports.getCollProductByOrderNumber = orderNumber => {
+
+    var query =  collProduct.find({"orderNumber": orderNumber});
+    return query.exec((err,docs) => {
+        if(err) return err;
+        else return docs;
+    });
+};

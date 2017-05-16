@@ -15,8 +15,8 @@ module.exports = (express) => {
             });
         })
         .post((req, res) => {
-            console.log(req.body._id + " " +  req.body.name + " " + req.body.isDryGoods);
-            controller.createProduct(req.body._id, req.body.name, req.body.isDryGoods)
+            console.log(req.body._id + " " +  req.body.name + " " + req.body.isDryGoods + " " + req.body.orderNumber);
+            controller.createProduct(req.body._id, req.body.name, req.body.isDryGoods, req.body.orderNumber)
                 .then(function() {
                     res.json({message: 'Product saved!'});
                 })
@@ -46,11 +46,15 @@ module.exports = (express) => {
 
     router.route('/api/products/:id')
         .get((req, res) => {
-            var item = controller.getCollProductById(req.params.id);
+            if(req.params.id.length === 6) {
+                var item = controller.getCollProductByOrderNumber(req.params.id);
+            } else {
+                var item = controller.getCollProductById(req.params.id);
+            }
             item.then(function (doc) {
                 if (doc) {
                     res.status(200).json(doc);
-                } else res.status(418).json('Iam a teapot');
+                } else res.status(418).json('I\'m a teapot');
             })
 
         })
