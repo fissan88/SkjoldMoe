@@ -11,7 +11,7 @@ module.exports = function (express) {
             //get collexp from values by find
             //    res.json(controller.getCollExpiration(req.body.barcode, req.body.date, req.body.quantity));
             var items = controller.getAllCollExpirations();
-            items.then(function (doc){
+            items.then(function (doc) {
                 items = doc;
                 if (items) {
                     res.status(200).json(doc);
@@ -29,10 +29,10 @@ module.exports = function (express) {
 
             if (BARCODE_REGEX.test(inputBarcode)) {
                 // if (inputDate instanceof Date) {
-                    if (inputQuantity >= 0) {
-                        controller.createCollExpiration(req.body.barcode, req.body.date, req.body.quantity);
-                        res.status(200).json({message: "Objekt blev oprettet"});
-                    }
+                if (inputQuantity >= 0) {
+                    controller.createCollExpiration(req.body.barcode, req.body.date, req.body.quantity);
+                    res.status(200).json({message: "Objekt blev oprettet"});
+                }
                 // }
             }
             else res.status(500).json({message: "Der gik noget galt"});
@@ -54,10 +54,10 @@ module.exports = function (express) {
             let inputDate = req.body.date;
             let inputQuantity = req.body.quantity;
 
-            if(!inputBarcode){
+            if (!inputBarcode) {
                 controller.updateQuantityCollExpiration(inputId, inputQuantity);
                 res.status(200).json({message: "Objekt blev opdateret"});
-            }else if (BARCODE_REGEX.test(inputBarcode)) {
+            } else if (BARCODE_REGEX.test(inputBarcode)) {
                 if (inputDate instanceof Date) {
                     if (inputQuantity >= 0) {
                         controller.updateCollExpiration(inputId, inputBarcode, inputDate, inputQuantity);
@@ -78,17 +78,19 @@ module.exports = function (express) {
             }
         });
 
-    router.route('/api/collExpirations/today')
+    router.route('/api/collExpToday')
         .get((req, res) => {
             //gets expirations from today
             let inputDate = new Date();
-            inputDate.setDate(inputDate.getDate()-1);
-            let item = controller.getExpToday(inputDate);
-            item.then(function (doc) {
+            inputDate.setUTCHours(0, 0, 0, 0);
+
+            controller.getExpToday(inputDate).then(function (doc) {
                 if (doc) {
                     res.status(200).json(doc);
                 } else res.status(418).json('Iam a teapot');
             })
         });
+
+
     return router;
 };

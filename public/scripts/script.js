@@ -174,10 +174,11 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '#testButtonDateReg', () => {
-        $.get('/api/collExpirations/today', (req, res) =>{
-            for(let i in req){
-                console.log(req[i].constructor.name);
-            }});
+        $.get('/api/today', (req, res) =>{
+            console.log(res);
+            // for(let i in req){
+            //     console.log(req[i]);
+            });
         $('#dateRegModal').modal("show")});
 
     // TODO skal have opdateret vores varer på listen med en ny glyphicon og antal

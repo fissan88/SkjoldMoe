@@ -146,18 +146,43 @@ exports.getCollProductById = (id) => {
 
 
 //TODO: sender en liste med expirations fra i dag / ligger lige nu i script på klientsiden
-exports.getExpToday = (inputDate) =>{
-    let query = collExp.find({date: { $gt: inputDate}});
+exports.getExpToday = (inputDate) => {
+    var query = collExp.find({date: inputDate});
     return query.exec(function (err, docs) {
         if (err) return err;
         else {
-            console.log(docs);
             return docs;
         }
     });
 };
 
 //TODO: sender en liste med produkter/vare fra i dag
-exports.getProductsToday = () =>{
+exports.getProductsToday = () => {
+    let tempArr = [];
+    let todaysProducts = [];
+    let inputDate = new Date();
+    inputDate.setUTCHours(0, 0, 0, 0);
+
+           let query = collExp.find({date: inputDate});
+            query.exec(function (err, docs) {
+
+            for(let i = 0; i < docs.length; i++) {
+                // if(!tempArr.indexOf(todaysExpirations[i])) {
+                tempArr.push(docs[i].barcode);
+
+            }
+
+        }).then(() => {
+
+                for(let i = 0; i < tempArr.length; i++) {
+                    let query = collProduct.findOne({_id: tempArr[i]});
+                    query.exec(function (err, doc) {
+                        todaysProducts.push(doc);
+                    });
+                }
+    })
+
+    console.log(todaysProducts);
+    return todaysProducts;
 
 };

@@ -50,7 +50,7 @@ module.exports = (express) => {
             item.then(function (doc) {
                 if (doc) {
                     res.status(200).json(doc);
-                } else res.status(418).json('Iam a teapot');
+                } else res.status(418).json('I am a teapot');
             })
 
         })
@@ -65,15 +65,13 @@ module.exports = (express) => {
             }
         });
 
-    router.route('/api/products/today')
+    router.route('/api/productsToday')
         .get((req, res) => {
-            //gets products with expirations from today
-            let item = controller.getProductsToday();
-            item.then(function (doc) {
-                if (doc) {
-                    res.status(200).json(doc);
-                } else res.status(418).json('Iam a teapot');
-            })
+            //getter produkter der skal registreres i dag
+
+            let productsToday = controller.getProductsToday();
+            console.log(controller.getProductsToday());
+            res.status(200).json(productsToday);
         });
     return router;
 };
