@@ -22,10 +22,10 @@ function populateSortimentList() {
                     + '<label>'+req[i]._id + ' - ' + req[i].name+'</label>'
                     + '<div class="pull-right action-buttons">'
                     + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-pencil" id="glyphEdit' + req[i]._id + '"></span></a>'
-                    + '<a href="#" data-barcode="' + req[i]._id + '"><span  class="trash" id="glyphDelete' + req[i]._id + '"><span class="glyphicon glyphicon-trash"></span></a>'
+                    + '<a href="#" data-barcode="' + req[i]._id + '"><span  class="glyphicon glyphicon-trash" id="glyphDelete' + req[i]._id + '"></span></a>'
                     + '</div></li>');
 
-            $('#glyph' + req[i]._id).on('click', () => {
+            $('#glyphEdit' + req[i]._id).on('click', () => {
                 editGoods(req[i]._id, req[i].name, req[i].isDryGoods);
             });
 
