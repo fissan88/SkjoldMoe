@@ -6,8 +6,6 @@ const collProduct = require('../models/product');
 const BARCODE_REGEX = /^\d{8}|\d{13}|\d{15}$/;
 const mongoose = require('mongoose');
 
-
-
 exports.createCollExpiration = (barcode, date, quantity) => {
     let tmpItem = new collExp({
         barcode: barcode,
@@ -20,19 +18,18 @@ exports.createCollExpiration = (barcode, date, quantity) => {
 
 exports.getCollExpiration = (barcode, date, quantity) => {
     var query = collExp.findOne({barcode: barcode, date: date, quantity: quantity});
-    return query.exec(function (err,docs) {
-        if(err) return err;
+    return query.exec(function (err, docs) {
+        if (err) return err;
         else {
             return docs;
         }
     });
 };
 
-
 exports.getAllCollExpirations = () => {
     var query = collExp.find({});
-    return query.exec(function (err,docs) {
-        if(err) return err;
+    return query.exec(function (err, docs) {
+        if (err) return err;
         else {
             return docs;
         }
@@ -40,7 +37,7 @@ exports.getAllCollExpirations = () => {
 };
 
 exports.deleteCollExpiration = (id) => {
-    collExp.remove({_id : id}, function(err){
+    collExp.remove({_id: id}, function (err) {
         if (err) {
             return err;
         }
@@ -48,39 +45,55 @@ exports.deleteCollExpiration = (id) => {
 };
 
 exports.getCollExpirationById = (id) => {
-
-    return collExp.findById(id).exec((err,docs) => {if(err) return err; else return docs;});
+    return collExp.findById(id).exec((err, docs) => {
+        if (err) return err; else return docs;
+    });
 };
 
 exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
-
-    var query = collExp.findByIdAndUpdate(oldId, {barcode: newBarcode, date: newDate, quantity: newQuantity}, {new: true});
+    var query = collExp.findByIdAndUpdate(oldId, {
+        barcode: newBarcode,
+        date: newDate,
+        quantity: newQuantity
+    }, {new: true});
     return query.exec(function (err, doc) {
-        if(err) return err;
+        if (err) return err;
         else {
             return doc;
         }
     });
-
 };
 
-exports.createProduct = function(id, name, isDryGoods) {
-    if(name.length > 0
-        && typeof(id) === 'string'
-        && BARCODE_REGEX.test(id)) {
+exports.createProduct = function (id, name, isDryGoods) {
+    return new Promise ((resolve, reject) => {
+        if (name.length > 0
+            && typeof(id) === 'string'
+            && BARCODE_REGEX.test(id)) {
 
-        let newProduct = new collProduct({
-            _id: id,
-            name: name,
-            isDryGoods: isDryGoods
-        });
+            let newProduct = new collProduct({
+                _id: id,
+                name: name,
+                isDryGoods: isDryGoods
+            });
 
-        newProduct.save().then(() => {
-            resolve();
-        });
-    } else {
-        throw new Error;
-    }
+            newProduct.save().then(resolve);
+        } else {
+           reject();
+        }
+    });
+};
+
+exports.updateCollProducts = (id, newName, newIsDryGoods) => {
+
+    collProduct.findOne({_id: id}, function (err, doc) {
+        doc.name = newName;
+        doc.isDryGoods = newIsDryGoods;
+        doc.save((err) => {
+            if (err) {
+                return err;
+            }
+        })
+    });
 };
 
 exports.getCollProductById = (id) => {

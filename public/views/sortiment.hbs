@@ -1,48 +1,34 @@
-<div  class="row">
-    <div class="col-sm-3">
+<div class="row">
+    <div class="col-sm-6">
         <div class="panel panel-success">
             <div class="panel-heading">
                 <h1 class="panel-title">Sortiment</h1>
             </div>
-            <div class="panel-body">
-                <ui id="wareList">
-                </ui>
+            <div class="panel-body" style="max-height: 200px; overflow-y:scroll;">
+                <ul class="list-group" id="stockList">
+                </ul>
             </div>
         </div>
-        <button type="button" class="btn btn-success btn-block">Scan</button>
-    </div>
-    <div class="col-sm-3">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h1 class="panel-title">Placeholder</h1>
-            </div>
-            <div class="panel-body">
-            <input class="form-control" type="text" placeholder="Stregkode" id="selectedProductBarcode">
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-3">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h1 class="panel-title">Udløbsdato</h1>
-            </div>
-            <div class="panel-body">
-                <input type="date" id="expDate">
-                <button type="button" class="btn btn-success btn-block" id="btnCreateExpiration">Tilføj Udløbsdato</button>
 
-            </div>
-        </div>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Søg efter...">
+                <span class="input-group-btn">
+        <button class="btn btn-success glyphicon glyphicon-search" type="button" style="margin-bottom: 15px"></button>
+      </span>
+            </div><!-- /input-group -->
+            <button type="button" class="btn btn-success btn-block" style="margin-bottom: 15px">Scan</button>
     </div>
-    <div class="col-sm-3">
+
+    <div class="col-sm-6">
         <div class="panel panel-success">
             <div class="panel-heading">
                 <h1 class="panel-title">Opret ny vare</h1>
             </div>
             <div class="panel-body">
-                <!--<input class="form-control" type="text" placeholder="Varenavn" id="newProductName">-->
-                <!--<input class="form-control" type="text" placeholder="Stregkode" id="newProductBarcode">-->
-                <!--<input type="checkbox" name="isDryGoods" value="isDryGoods" id="isDrydGoods"> Er tørvare?-->
-                <!--<button type="button" class="btn btn-success btn-block" id="btnCreateProduct">Opret</button>-->
+                <input class="form-control" type="text" placeholder="Varenavn" id="newProductName" style="margin-bottom: 10px">
+                <input class="form-control" type="text" placeholder="Stregkode" id="newProductBarcode" style="margin-bottom: 15px">
+                <input type="checkbox" name="isDryGoods" value="isDryGoods" id="isDryGoods" style="margin-bottom: 15px"> Er tørvare?
+                <button type="button" class="btn btn-success btn-block" id="btnCreateProduct">Opret</button>
             </div>
         </div>
     </div>
@@ -78,7 +64,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-dismiss="modal" id="btnOpdaterModal">Opdater</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" id="btnOpdaterModal">Opdater
+                    </button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

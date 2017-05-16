@@ -25,6 +25,23 @@ module.exports = (express) => {
                     if (err.stack) console.error(err.stack);
                     res.status(500).send(err);
                 });
+        })
+        .put((req,res) => {
+            const BARCODE_REGEX = /^\d{8}|\d{13}|\d{15}$/;
+            let id = req.body._id;
+            let name = req.body.name;
+            let isDryGoods = req.body.isDryGoods;
+            console.log(isDryGoods.constructor.name);
+
+            if (BARCODE_REGEX.test(id)) {
+                  if (name !== null) {
+                          console.log("Kalder controller funktionen updateCollProducts");
+                          controller.updateCollProducts(id, name, isDryGoods);
+                          res.status(200).json({message: "Produktet blev opdateret"});
+                }
+            }
+            else res.status(500).json({message: "Der gik noget galt ..."});
+
         });
 
     router.route('/api/products/:id')
@@ -39,9 +56,6 @@ module.exports = (express) => {
 
         })
         .post((req, res) => {
-
-        })
-        .put((req,res) => {
 
         })
         .delete((req, res) => {
