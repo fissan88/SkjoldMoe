@@ -9,7 +9,8 @@ var Schema = mongoose.Schema;
 var collExpirations = new Schema({
     barcode: String,
     date: Date,
-    quantity: Number
+    quantity: Number,
+    isChecked: Boolean
 },  {collection: 'collExpirations', versionKey: false});
 
 module.exports = mongoose.model('collExp', collExpirations);
