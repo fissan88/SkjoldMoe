@@ -51,7 +51,7 @@ function deleteExpirationsByBarcode(barcode) {
     return query.exec(function (err, docs) {
         if (err) return err;
         else {
-            for(let i = 0; i < docs.length; i++) {
+            for (let i = 0; i < docs.length; i++) {
                 docs[i].remove();
             }
         }
@@ -104,7 +104,7 @@ exports.updateQuantityCollExpiration = (id, quantity) => {
 };
 
 exports.createProduct = function (id, name, isDryGoods) {
-    return new Promise ((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         if (name.length > 0
             && typeof(id) === 'string'
             && BARCODE_REGEX.test(id)) {
@@ -117,7 +117,7 @@ exports.createProduct = function (id, name, isDryGoods) {
 
             newProduct.save().then(resolve);
         } else {
-           reject();
+            reject();
         }
     });
 };
@@ -137,9 +137,9 @@ exports.updateCollProducts = (id, newName, newIsDryGoods) => {
 
 exports.getCollProductById = (id) => {
 
-    var query =  collProduct.findById(id);
-    return query.exec((err,docs) => {
-        if(err) return err;
+    var query = collProduct.findById(id);
+    return query.exec((err, docs) => {
+        if (err) return err;
         else return docs;
     });
 };
@@ -163,26 +163,37 @@ exports.getProductsToday = () => {
     let inputDate = new Date();
     inputDate.setUTCHours(0, 0, 0, 0);
 
-           let query = collExp.find({date: inputDate});
-            query.exec(function (err, docs) {
+    let query = collExp.find({date: inputDate});
+    query.exec(function (err, docs) {
+        return docs;
+    }).then((docs) => {
+        return new Promise((resolve, reject) => {
 
-            for(let i = 0; i < docs.length; i++) {
+            for (let i = 0; i < docs.length; i++) {
                 // if(!tempArr.indexOf(todaysExpirations[i])) {
                 tempArr.push(docs[i].barcode);
-
             }
-
-        }).then(() => {
-
-                for(let i = 0; i < tempArr.length; i++) {
-                    let query = collProduct.findOne({_id: tempArr[i]});
-                    query.exec(function (err, doc) {
+            resolve();
+        })
+    }).then(() => {
+        return new Promise((resolve, reject) => {
+            for (let i = 0; i < tempArr.length; i++) {
+                console.log("Kalder findone med: " + tempArr[i]);
+                let query = collProduct.findOne({_id: tempArr[i]});
+                query.exec(function (err, doc) {
+                    if (!err && doc != null) {
+                        console.log("Fandt: " + doc);
                         todaysProducts.push(doc);
-                    });
-                }
-    })
+                    }
+                });
+            };
+            console.log("lige før resolve :" + tempArr.length);
+            resolve();
 
-    console.log(todaysProducts);
-    return todaysProducts;
+        })
+    }).then(() => {
+        console.log("For loop med populate todaysProducts overstået, indeholder nu: " + todaysProducts);
+        return todaysProducts;
+    })
 
 };
