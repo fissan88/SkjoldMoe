@@ -64,9 +64,10 @@ exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
     });
 };
 
-exports.updateQuantityCollExpiration = (id, quantity) => {
+exports.updateQuantityCollExpiration = (id, quantity, isChecked) => {
     var query = collExp.findByIdAndUpdate(id, {
-        quantity: quantity
+        quantity: quantity,
+        isChecked: isChecked
     }, {new: true});
     return query.exec(function (err, doc) {
         if (err) return err;

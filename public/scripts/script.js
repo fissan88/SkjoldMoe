@@ -103,12 +103,11 @@ function addItemsToExpirationLists(){
                     }
                     var quantity = req[i].quantity;
                     var okGlyphicon = '';
-                    if(quantity == 0){
-                        quantity = '';
-                    }else {
-                        quantity = 'value =' + quantity;
+
+                    if(req[i].isChecked){
                         okGlyphicon = '<span id="saveBtn" class="glyphicon glyphicon-ok"></span>';
                     }
+                    quantity = 'value =' + quantity;
                     $('#' + listLocation + 'Goods').append('<tr  data-barcode="'+product._id+'" data-id="'+req[i]._id+'"><td>'+product.name+'</td><td><input id="numSelect" type="number" '+quantity+'></td><td><span id="saveBtn" class="glyphicon glyphicon-floppy-disk"></span>'+okGlyphicon+'</td></tr>')
                 });
             }
@@ -168,7 +167,7 @@ $(document).ready(function () {
             type: "PUT",
             url: "/api/collExpirations/" + id,
             contentType: "application/json",
-            data: JSON.stringify({quantity: quantity})
+            data: JSON.stringify({quantity: quantity, isChecked: true})
         }).done(() => {
             if(!$(event.target.parentNode.lastChild).hasClass("glyphicon glyphicon-ok")){
                 $(event.target.parentNode).append('<span id="saveBtn" class="glyphicon glyphicon-ok"></span>');
