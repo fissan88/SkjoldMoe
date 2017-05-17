@@ -25,7 +25,7 @@ function populateProductsToRegister() {
                 + '</div></li>');
 
             $('#glyphRegisterExp' + req[i]._id).on('click', () => {
-                addExpirationsToProduct(req[i]._id);
+                    addExpirationsToProduct(req[i]);
             });
         }
     });
@@ -118,10 +118,13 @@ function updateProduct(barcode, name, isDryGoods) {
     });
 }
 
-function addExpirationsToProduct(id) {
+function addExpirationsToProduct(product) {
     $('#dateRegModal').modal("show");
+    $('#dateRegModalBody').empty();
 
-    $.get('/api/expirations/:id')
+    if(product.expirations.length > 0) {
+        $('#dateRegModalBody').append("<p>" + product.expirations[0].date + "</p>");
+    }
 
 };
 

@@ -67,7 +67,6 @@ module.exports = (express) => {
 
     router.route('/api/productsToday')
         .get((req, res) => {
-            //getter produkter der skal registreres i dag
             let getPro = controller.getProductsToday();
             getPro.then((docs) => {
                 if(docs) {
@@ -76,6 +75,8 @@ module.exports = (express) => {
                     res.status(418).json('I am a teapot');
                 }
             });
+
+
 
         });
     return router;
