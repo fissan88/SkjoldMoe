@@ -18,22 +18,23 @@ function populateSortimentList() {
 
     $.get('/api/products', (req, res) => {
         for (let i in req) {
-            $('#stockList').append('<div class="list-group-item list-group-item-action flex-column align-items-start">'
-                    + ' <div class="d-flex w-100 justify-content-between">'
-                    + '<h5 class="mb-1">'
-                    + '<strong>Stregkode - Navn:</strong> <br>'
-                    +  req[i]._id + ' - ' + req[i].name
-                    + '</h5>'
-                    + '<small class="text-muted pull-right action-buttons">'
-                    + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-pencil" id="glyphEdit' + req[i]._id + '"></span></a>'
-                    + '<a href="#" data-barcode="' + req[i]._id + '"><span  class="glyphicon glyphicon-trash" id="glyphDelete' + req[i]._id + '"></span></a>'
-                    + '</small>'
-                    + '</div>'
-                    + '<p>'
-                    + '<strong>Bestillingsnummer:</strong> <br>'
-                    +  req[i].orderNumber
-                    + '</p>'
-                    + '</li></div>');
+            $('#stockList').append('<li class="list-group-item">'
+                + '<div class="list-group-item list-group-item-action flex-column align-items-start">'
+                + ' <div class="d-flex w-100 justify-content-between">'
+                + '<h5 class="mb-1">'
+                + '<strong>Stregkode - Navn:</strong> <br>'
+                + req[i]._id + ' - ' + req[i].name
+                + '</h5>'
+                + '<small class="text-muted pull-right action-buttons">'
+                + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-pencil" id="glyphEdit' + req[i]._id + '"></span></a>'
+                + '<a href="#" data-barcode="' + req[i]._id + '"><span  class="glyphicon glyphicon-trash" id="glyphDelete' + req[i]._id + '"></span></a>'
+                + '</small>'
+                + '</div>'
+                + '<p>'
+                + '<strong>Bestillingsnummer:</strong> <br>'
+                + req[i].orderNumber
+                + '</p>'
+                + '</div></li>');
 
             $('#glyphEdit' + req[i]._id).on('click', () => {
                 editGoods(req[i]._id, req[i].name, req[i].isDryGoods);
@@ -110,44 +111,58 @@ function updateProduct(barcode, name, isDryGoods) {
     });
 }
 
-function addItemsToExpirationLists(){
-    $.get('/api/collExpirations', (req, res) =>{
-        for(let i in req){
+function addItemsToExpirationLists() {
+    $.get('/api/collExpirations', (req, res) => {
+        for (let i in req) {
             var currentDate = new Date;
             var month = currentDate.getMonth();
             month = monthConverter(month);
             var currentDateString = currentDate.getFullYear() + '-' + month + '-' + currentDate.getDate();
 
             var productDate = req[i].date;
-            var productDateString = productDate.slice(0,10);
+            var productDateString = productDate.slice(0, 10);
 
-            if(productDateString === currentDateString){
-                $.get('/api/products/' + req[i].barcode, (product, res2) =>{
+            if (productDateString === currentDateString) {
+                $.get('/api/products/' + req[i].barcode, (product, res2) => {
                     var listLocation = 'fresh';
-                    if(product.isDryGoods){
+                    if (product.isDryGoods) {
                         listLocation = 'dry';
                     }
                     var quantity = req[i].quantity;
                     var okGlyphicon = '';
 
-                    if(req[i].isChecked){
+                    if (req[i].isChecked) {
                         okGlyphicon = '<span id="saveBtn" class="glyphicon glyphicon-ok"></span>';
                     }
                     quantity = 'value =' + quantity;
-                    $('#' + listLocation + 'Goods').append('<tr  data-barcode="'+product._id+'" data-id="'+req[i]._id+'"><td>'+product.name+'</td><td><input id="numSelect" type="number" '+quantity+'></td><td><span id="saveBtn" class="glyphicon glyphicon-floppy-disk"></span>'+okGlyphicon+'</td></tr>')
+                    $('#' + listLocation + 'Goods').append('<tr  data-barcode="' + product._id + '" data-id="' + req[i]._id + '"><td>' + product.name + '</td><td><input id="numSelect" type="number" ' + quantity + '></td><td><span id="saveBtn" class="glyphicon glyphicon-floppy-disk"></span>' + okGlyphicon + '</td></tr>')
                 });
             }
         }
     });
     function monthConverter(month) {
-        month = month +1;
-        if(month<10){
+        month = month + 1;
+        if (month < 10) {
             month = '0' + month;
         }
         return month
     }
-};
-
+}
+// Search Function
+$(document).on('keyup', '#search', function () {
+    var current_query = $('#search').val();
+    if (current_query !== "") {
+        $(".list-group li").hide();
+        $(".list-group li").each(function () {
+            var current_keyword = $(this).text().toUpperCase();
+            if (current_keyword.indexOf(current_query.toUpperCase()) >= 0) {
+                $(this).show();
+            }
+        });
+    } else {
+        $(".list-group li").show();
+    }
+});
 
 $(document).ready(function () {
     addItemsToExpirationLists();
@@ -182,9 +197,8 @@ $(document).ready(function () {
         $('#btnSortiment').addClass('active');
     });
 
-    // TODO skal have opdateret vores varer på listen med en ny glyphicon og antal
     // gemmer det nye antal af varer
-    $(document).on('click', '#saveBtn', (event)=> {
+    $(document).on('click', '#saveBtn', (event) => {
 
         var id = $(event.target.parentNode.parentNode).data('id');
         var quantity = $(event.target.parentNode.previousSibling.firstChild).val();
@@ -195,10 +209,10 @@ $(document).ready(function () {
             contentType: "application/json",
             data: JSON.stringify({quantity: quantity, isChecked: true})
         }).done(() => {
-            if(!$(event.target.parentNode.lastChild).hasClass("glyphicon glyphicon-ok")){
+            if (!$(event.target.parentNode.lastChild).hasClass("glyphicon glyphicon-ok")) {
                 $(event.target.parentNode).append('<span id="saveBtn" class="glyphicon glyphicon-ok"></span>');
             }
-                $(event.target.parentNode.parentNode).fadeTo('slow', 0.5).fadeTo('slow', 1.0);
+            $(event.target.parentNode.parentNode).fadeTo('slow', 0.5).fadeTo('slow', 1.0);
         });
 
     });
