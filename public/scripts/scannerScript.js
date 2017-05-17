@@ -27,7 +27,8 @@ $(function () {
                     supplement: [
                         'ean_5_reader', 'ean_2_reader'
                     ]
-                }}
+                }},
+                {format: "i2of5_reader"}
             ]
         },
         locate: true
