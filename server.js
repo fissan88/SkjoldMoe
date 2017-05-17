@@ -30,10 +30,12 @@ console.log("Connected to database ...");
 const indexRouter = require('./route/index.js')(express);
 const productRouter = require("./route/products.js")(express);
 const expRouter = require('./route/collExpirations.js')(express);
+const usersRouter = require('./route/users.js')(express);
 
 app.use(indexRouter);
 app.use(productRouter);
 app.use(expRouter);
+app.use(usersRouter);
 
 //Setup views
 app.set('view engine', 'hbs');

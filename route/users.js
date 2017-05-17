@@ -10,13 +10,13 @@ module.exports = (express) => {
 
     router.route('/api/users')
         .get((req, res) => {
-            collProduct.find({}, (err, docs) => {
+            collUsers.find({}, (err, docs) => {
                 res.json(docs);
             });
         })
         .post((req, res) => {
             console.log(req.body.name + " " +  req.body.password);
-            controller.createProduct(req.body.name, req.body.password)
+            controller.createUser(req.body.name, req.body.password)
                 .then(function() {
                     res.json({message: 'User saved!'});
                 })

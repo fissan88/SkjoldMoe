@@ -158,11 +158,17 @@ exports.getCollProductByOrderNumber = orderNumber => {
 };
 
 // Opretter en ny bruger i systemet.
-exports.createUser = (name, password) => {
-    let tmpItem = new collUsers({
-        name: name,
-        date: password
+exports.createUser = function (name, password) {
+    return new Promise ((resolve, reject) => {
+        if (true) {
+            let newUser = new collUsers({
+                name: name,
+                password: password
+            });
+
+            newUser.save().then(resolve);
+        } else {
+            reject();
+        }
     });
-    tmpItem.save();
-    return tmpItem;
 };
