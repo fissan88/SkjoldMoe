@@ -60,10 +60,14 @@ function deleteExpirationsByBarcode(barcode) {
 
 exports.getExpByBarcodeToday = (id) => {
     let today = new Date();
-    today.setUTCHours(0,0,0,0);
+    today.setUTCHours(0, 0, 0, 0);
 
-    collExp.find({barcode: id, date: {$gte: today}}).exec((err, docs) => {
-        if (err) return err; else return docs;
+    let query = collExp.find({barcode: id, date: {$gte: today}});
+    return query.exec((err, docs) => {
+        if (err) return err;
+        else {
+            return docs;
+        }
     });
 };
 
@@ -164,13 +168,25 @@ exports.getExpToday = (inputDate) => {
     });
 };
 
-//TODO: sender en liste med produkter/vare fra i dag
+exports.getProductsWithNoExp()
+{
+    return new Promise((resolve)=>
+    {
+        let query = collExp.find({date: {$gte: inputDate}});
+
+        query.exec(function (err, docs) {
+            return docs;
+        })
+    })
+}
+
+
 exports.getProductsFromToday = () => {
     return new Promise((resolve, reject) => {
         let tempArr = [];
         let inputDate = new Date();
         inputDate.setUTCHours(0, 0, 0, 0);
-        let query = collExp.find({date: inputDate});
+        let query = collExp.find({date: {$gte: inputDate}});
 
         query.exec(function (err, docs) {
             return docs;
@@ -187,7 +203,9 @@ exports.getProductsFromToday = () => {
                 query.exec(function (err, docs) {
                     if (err) {
                         return err;
-                    } else resolve(docs);
+                    } else {
+                        resolve(docs);
+                    }
                 });
             })
         }).then((docs) => {
@@ -197,17 +215,41 @@ exports.getProductsFromToday = () => {
 };
 
 exports.getProductsToday = () => {
-    return new Promise((resolve, rejects) => {
-        let productsFromToday = this.getProductsFromToday();
-        let productsWithOnlyExpirationsFromToday = [];
+    return new Promise((resolve) => {
+        this.getProductsFromToday().then((docs) => {
+            let barcodesFromProductsWithOnlyExpToday = [];
 
-        for(let i = 0; i < productsFromToday.length; i++) {
-            if(this.getExpByBarcodeToday(productsFromToday[i]._id).length > 0) {
-                productsWithOnlyExpirationsFromToday.push(productsFromToday[i]);
+            for (let i = 0; i < docs.length; i++) {
+                let crocs = this.getExpByBarcodeToday(docs[i]._id);
+                crocs.then((socks) => {
+                        console.log("socks længde er nu: " + socks.length);
+                        if(socks)
+                        {
+                            barcodesFromProductsWithOnlyExpToday.push(docs[i]._id);
+                        }
+                        if (socks.length == 1) {
+                            console.log("Pusher nu socks elemnet til array:" + socks[0].barcode);
+                            barcodesFromProductsWithOnlyExpToday.push(socks[0].barcode);
+                        }
+                        if (i == docs.length - 1) {
+                            console.log("new barcode array indeholder: " + barcodesFromProductsWithOnlyExpToday);
+                            resolve(barcodesFromProductsWithOnlyExpToday)
+                        }
+                    }
+                );
             }
-        }
+        });
 
-        resolve(productsWithOnlyExpirationsFromToday);
-    }) ;
-
+    }).then((focs) => {
+        return new Promise((resolve, reject) => {
+            let query = collProduct.find({_id: focs});
+            query.exec(function (err, docs) {
+                if (err) {
+                    return err;
+                } else {
+                    resolve(docs);
+                }
+            });
+        })
+    })
 };
