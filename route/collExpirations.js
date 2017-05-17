@@ -91,6 +91,20 @@ module.exports = function (express) {
             })
         });
 
+    router.route('/api/collExpToday/:barcode')
+        .get((req, res) => {
+            //gets expirations from today
+            let inputDate = new Date();
+            inputDate.setUTCHours(0, 0, 0, 0);
+
+            controller.getExpToday(inputDate).then(function (docs) {
+
+                // if (doc) {
+                //     res.status(200).json(doc);
+                // } else res.status(418).json('Iam a teapot');
+            })
+        });
+
 
     return router;
 };

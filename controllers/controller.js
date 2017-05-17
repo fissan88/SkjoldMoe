@@ -58,6 +58,15 @@ function deleteExpirationsByBarcode(barcode) {
     });
 }
 
+exports.getExpByBarcodeToday = (id) => {
+    let today = new Date();
+    today.setUTCHours(0,0,0,0);
+
+    collExp.find({barcode: id, date: {$gte: today}}).exec((err, docs) => {
+        if (err) return err; else return docs;
+    });
+};
+
 exports.deleteProduct = (id) => {
     deleteExpirationsByBarcode(id);
 
@@ -144,7 +153,6 @@ exports.getCollProductById = (id) => {
     });
 };
 
-
 //TODO: sender en liste med expirations fra i dag / ligger lige nu i script på klientsiden
 exports.getExpToday = (inputDate) => {
     var query = collExp.find({date: inputDate});
@@ -157,35 +165,49 @@ exports.getExpToday = (inputDate) => {
 };
 
 //TODO: sender en liste med produkter/vare fra i dag
-exports.getProductsToday = () => {
+exports.getProductsFromToday = () => {
     return new Promise((resolve, reject) => {
+        let tempArr = [];
+        let inputDate = new Date();
+        inputDate.setUTCHours(0, 0, 0, 0);
+        let query = collExp.find({date: inputDate});
 
+        query.exec(function (err, docs) {
+            return docs;
+        }).then((docs) => {
+            return new Promise((resolve, reject) => {
+                for (let i = 0; i < docs.length; i++) {
+                    tempArr.push(docs[i].barcode);
+                }
+                resolve();
+            })
+        }).then(() => {
+            return new Promise((resolve, reject) => {
+                let query = collProduct.find({_id: tempArr});
+                query.exec(function (err, docs) {
+                    if (err) {
+                        return err;
+                    } else resolve(docs);
+                });
+            })
+        }).then((docs) => {
+            resolve(docs);
+        });
+    });
+};
 
-    let tempArr = [];
-    let inputDate = new Date();
-    inputDate.setUTCHours(0, 0, 0, 0);
-    let query = collExp.find({date: inputDate});
+exports.getProductsToday = () => {
+    return new Promise((resolve, rejects) => {
+        let productsFromToday = this.getProductsFromToday();
+        let productsWithOnlyExpirationsFromToday = [];
 
-    query.exec(function (err, docs) {
-        return docs;
-    }).then((docs) => {
-        return new Promise((resolve, reject) => {
-            for (let i = 0; i < docs.length; i++) {
-                tempArr.push(docs[i].barcode);
+        for(let i = 0; i < productsFromToday.length; i++) {
+            if(this.getExpByBarcodeToday(productsFromToday[i]._id).length > 0) {
+                productsWithOnlyExpirationsFromToday.push(productsFromToday[i]);
             }
-            resolve();
-        })
-    }).then(() => {
-        return new Promise((resolve, reject) => {
-            let query = collProduct.find({_id: tempArr});
-            query.exec(function (err, docs) {
-                if (err) {
-                    return err;
-                } else resolve(docs);
-            });
-        })
-    }).then((docs) => {
-        resolve(docs);
-    });
-    });
+        }
+
+        resolve(productsWithOnlyExpirationsFromToday);
+    }) ;
+
 };

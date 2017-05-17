@@ -13,6 +13,24 @@ function compileNewBody(templateName) {
     });
 }
 
+function populateProductsToRegister() {
+    $.get('/api/productsToday', (req,res) => {
+        $('#dateRegList').empty();
+
+        for (let i in req) {
+            $('#dateRegList').append('<li class="list-group-item">'
+                + '<label>'+req[i]._id + ' - ' + req[i].name+'</label>'
+                + '<div class="pull-right action-buttons">'
+                + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-plus" id="glyphRegisterExp' + req[i]._id + '"></span></a>'
+                + '</div></li>');
+
+            $('#glyphRegisterExp' + req[i]._id).on('click', () => {
+                addExpirationsToProduct(req[i]._id);
+            });
+        }
+    });
+}
+
 function populateSortimentList() {
     $('#stockList').empty();
 
@@ -100,6 +118,13 @@ function updateProduct(barcode, name, isDryGoods) {
     });
 }
 
+function addExpirationsToProduct(id) {
+    $('#dateRegModal').modal("show");
+
+    $.get('/api/expirations/:id')
+
+};
+
 function addItemsToExpirationLists(){
     $.get('/api/collExpirations', (req, res) =>{
         for(let i in req){
@@ -161,7 +186,7 @@ $(document).ready(function () {
 
     $('#btnRegistrer').click(function () {
         compileNewBody("registrer.hbs");
-        populateSortimentList();
+        populateProductsToRegister();
         toggleButtons();
         $('#btnRegistrer').addClass('active');
     });
@@ -172,14 +197,6 @@ $(document).ready(function () {
         toggleButtons();
         $('#btnSortiment').addClass('active');
     });
-
-    $(document).on('click', '#testButtonDateReg', () => {
-        $.get('/api/today', (req, res) =>{
-            console.log(res);
-            // for(let i in req){
-            //     console.log(req[i]);
-            });
-        $('#dateRegModal').modal("show")});
 
     // TODO skal have opdateret vores varer på listen med en ny glyphicon og antal
     // gemmer det nye antal af varer
