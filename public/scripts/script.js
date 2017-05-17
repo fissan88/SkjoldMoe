@@ -16,7 +16,6 @@ function compileNewBody(templateName) {
 function populateProductsToRegister() {
     $.get('/api/productsToday', (req,res) => {
         $('#dateRegList').empty();
-
         for (let i in req) {
             $('#dateRegList').append('<li class="list-group-item">'
                 + '<label>'+req[i]._id + ' - ' + req[i].name+'</label>'

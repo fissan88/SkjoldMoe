@@ -62,8 +62,12 @@ exports.getExpByBarcodeToday = (id) => {
     let today = new Date();
     today.setUTCHours(0,0,0,0);
 
-    collExp.find({barcode: id, date: {$gte: today}}).exec((err, docs) => {
-        if (err) return err; else return docs;
+    let query = collExp.find({barcode: id, date: {$gte: today}});
+    return query.exec((err, docs) => {
+        if (err) return err;
+        else {
+            return docs;
+        }
     });
 };
 
