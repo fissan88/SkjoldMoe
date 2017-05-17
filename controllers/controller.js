@@ -68,7 +68,6 @@ exports.deleteProduct = (id) => {
             }
         })
     });
-
 };
 
 exports.getCollExpirationById = (id) => {
