@@ -3,6 +3,7 @@
  */
 const collExp = require('../models/collExpirations');
 const collProduct = require('../models/product');
+const collUsers = require('../models/user');
 const BARCODE_REGEX = /^\d{8}|\d{13}|\d{15}$/;
 const mongoose = require('mongoose');
 
@@ -154,4 +155,14 @@ exports.getCollProductByOrderNumber = orderNumber => {
         if(err) return err;
         else return docs;
     });
+};
+
+// Opretter en ny bruger i systemet.
+exports.createUser = (name, password) => {
+    let tmpItem = new collUsers({
+        name: name,
+        date: password
+    });
+    tmpItem.save();
+    return tmpItem;
 };
