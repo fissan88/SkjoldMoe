@@ -90,7 +90,7 @@ $(function () {
     // the barcode had actually been found.
     Quagga.onDetected(function (result) {
         if (result.codeResult.code) {
-            $('#scanner_input').val(result.codeResult);
+            $('#scanner_input').val(result.codeResult.toString() );
             Quagga.stop();
             setTimeout(function () {
                 $('#livestream_scanner').modal('hide');
