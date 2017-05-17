@@ -28,7 +28,7 @@ $(function () {
                         'ean_5_reader', 'ean_2_reader'
                     ]
                 }},
-                {format: "i2of5_reader"}
+                {format: "i2of5_reader", config: {}}
             ]
         },
         locate: true
