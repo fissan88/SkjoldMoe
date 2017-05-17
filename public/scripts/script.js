@@ -182,7 +182,6 @@ $(document).ready(function () {
         $('#btnSortiment').addClass('active');
     });
 
-    // TODO skal have opdateret vores varer på listen med en ny glyphicon og antal
     // gemmer det nye antal af varer
     $(document).on('click', '#saveBtn', (event)=> {
 

@@ -21,7 +21,7 @@ $(function () {
         numOfWorkers: (navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 4),
         decoder: {
             "readers": [
-                {"format": "ean_8_reader", "config": {}}
+                {"format": "ean_13_reader", "config": {}}
             ]
         },
         locate: true
