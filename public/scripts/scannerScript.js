@@ -22,7 +22,7 @@ $(function () {
         decoder: {
             "readers": [
                 {"format": "i2of5_reader", "config": {}},
-                {"format": "ean_8_reader", "config": {}},
+                // {"format": "ean_8_reader", "config": {}},
                 {format: "ean_reader",
                 config: {
                     supplement: [
@@ -90,7 +90,7 @@ $(function () {
     // the barcode had actually been found.
     Quagga.onDetected(function (result) {
         if (result.codeResult.code) {
-            $('#scanner_input').val(result.codeResult.code);
+            $('#scanner_input').val(result.codeResult);
             Quagga.stop();
             setTimeout(function () {
                 $('#livestream_scanner').modal('hide');
