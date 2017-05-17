@@ -22,10 +22,11 @@ $(function () {
         decoder: {
             "readers": [
                 {"format": "i2of5_reader", "config": {}},
+                {"format": "ean_8_reader", "config": {}},
                 {format: "ean_reader",
                 config: {
                     supplement: [
-                        'ean_5_reader', "ean_8_reader",'ean_2_reader'
+                        'ean_5_reader', 'ean_2_reader'
                     ]
                 }}
             ]
