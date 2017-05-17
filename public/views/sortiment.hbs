@@ -10,13 +10,44 @@
             </div>
         </div>
 
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Søg efter...">
-                <span class="input-group-btn">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Søg efter...">
+            <span class="input-group-btn">
         <button class="btn btn-success glyphicon glyphicon-search" type="button" style="margin-bottom: 15px"></button>
       </span>
-            </div><!-- /input-group -->
-            <button type="button" class="btn btn-success btn-block" style="margin-bottom: 15px">Scan</button>
+        </div><!-- /input-group -->
+        <div class="col-sm-3 text-center">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Scan</h1>
+                </div>
+                <div class="panel-body" id="scanPic">
+                    <button type="button" class="btn btn-success btn-xl  btn-circle" style="margin-bottom: 15px" data-toggle="modal"  data-target="#livestream_scanner">Scan</button>
+                    <input id="scanner_input" class="form-control" placeholder="Klik på knappen for at scanne..."
+                           type="text"/>
+                    <div class="modal" id="livestream_scanner">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title">Scan Stregkode</h4>
+                                </div>
+                                <div class="modal-body" style="position: static">
+                                    <div id="interactive" class="viewport"></div>
+                                    <div class="error"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" data-dismiss="modal">Luk</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="col-sm-6">
