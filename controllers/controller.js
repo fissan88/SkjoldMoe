@@ -234,7 +234,7 @@ exports.getProductsToday = () => {
                             console.log(tempExpiration);
 
 
-                            if(tempExpiration.toString() >= today.toString()) {
+                            if(tempExpiration >= today) {
                                 latestDate = tempExpiration;
                             }
                         }
@@ -288,7 +288,7 @@ exports.filterGetProductsTodayByIsDryGoods = (isDryGoods) => {
                                     let tempExpiration = docs[i].expirations[n].date;
                                     tempExpiration.setUTCHours(0,0,0,0);
 
-                                    if(tempExpiration.toString() >= today.toString()) {
+                                    if(tempExpiration >= today) {
                                         latestDate = tempExpiration;
                                     }
                                 }

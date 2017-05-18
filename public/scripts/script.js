@@ -32,6 +32,23 @@ function populateProductsToRegister(targetContainer) {
     });
 }
 
+function populateProductsToRegisterDriedGoods(targetContainer, isDryGoods) {
+    $.get('/api/productsToday/' + isDryGoods, (req,res) => {
+        $(targetContainer).empty();
+        for (let i in req) {
+            $(targetContainer).append('<li class="list-group-item">'
+                + '<label>'+req[i]._id + ' - ' + req[i].name+'</label>'
+                + '<div class="pull-right action-buttons">'
+                + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-plus" id="glyphRegisterExp' + req[i]._id + '"></span></a>'
+                + '</div></li>');
+
+            $('#glyphRegisterExp' + req[i]._id).on('click', () => {
+                addExpirationsToProduct(req[i]);
+            });
+        }
+    });
+}
+
 function populateSortimentList() {
     $('#stockList').empty();
 
@@ -278,18 +295,30 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '#tabRegFresh', (event) => {
-        $('#tabRegFreshContent').empty();
-        $('#tabRegFreshContent').append("med");
+        populateProductsToRegisterDriedGoods('#tabRegFreshContent', "true");
     });
 
     $(document).on('click', '#tabRegDried', (event) => {
-        $('#tabRegDriedContent').empty();
-        $('#tabRegDriedContent').append("dig");
+        populateProductsToRegisterDriedGoods('#tabRegDriedContent', "false");
     });
 
     $(document).on('click', '#tabRegFromDate', (event) => {
         $('#tabRegFromDateContent').empty();
-        $('#tabRegFromDateContent').append("!");
+        $('#tabRegFromDateContent').append("Coming soon this christmasX!");
+    });
+
+    $(document).on('click', '#btnDateRegModalGodkend', (event) => {
+
+        let promises = [];
+
+        for(let i = 0; i < tmpDates.length; i++) {
+            promises.push(registerExp(tmpDates[i].barcode, tmpDates[i].date, tmpDates[i].quantity));
+        }
+
+        Promise.all(promises).then(() => {
+            populateProductsToRegister('#tabRegAllContent');
+        })
+
     });
 
     $(document).on('click', '#btnDateRegModalTilfoej', (event) => {
