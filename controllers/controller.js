@@ -121,7 +121,7 @@ exports.createProduct = function (id, name, isDryGoods, orderNumber) {
 
             newProduct.save().then(resolve);
         } else {
-           reject();
+            reject();
         }
     });
 };
@@ -172,3 +172,13 @@ exports.createUser = function (name, password) {
         }
     });
 };
+
+exports.hasUsername = function (username) {
+    let query =  collUsers.find({"name": username});
+    return query.exec((err,docs) => {
+        if(err) return err;
+        else {
+            return docs;
+        }
+    });
+}

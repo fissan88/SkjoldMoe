@@ -19,21 +19,21 @@ function populateSortimentList() {
     $.get('/api/products', (req, res) => {
         for (let i in req) {
             $('#stockList').append('<div class="list-group-item list-group-item-action flex-column align-items-start">'
-                    + ' <div class="d-flex w-100 justify-content-between">'
-                    + '<h5 class="mb-1">'
-                    + '<strong>Stregkode - Navn:</strong> <br>'
-                    +  req[i]._id + ' - ' + req[i].name
-                    + '</h5>'
-                    + '<small class="text-muted pull-right action-buttons">'
-                    + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-pencil" id="glyphEdit' + req[i]._id + '"></span></a>'
-                    + '<a href="#" data-barcode="' + req[i]._id + '"><span  class="glyphicon glyphicon-trash" id="glyphDelete' + req[i]._id + '"></span></a>'
-                    + '</small>'
-                    + '</div>'
-                    + '<p>'
-                    + '<strong>Bestillingsnummer:</strong> <br>'
-                    +  req[i].orderNumber
-                    + '</p>'
-                    + '</li></div>');
+                + ' <div class="d-flex w-100 justify-content-between">'
+                + '<h5 class="mb-1">'
+                + '<strong>Stregkode - Navn:</strong> <br>'
+                +  req[i]._id + ' - ' + req[i].name
+                + '</h5>'
+                + '<small class="text-muted pull-right action-buttons">'
+                + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-pencil" id="glyphEdit' + req[i]._id + '"></span></a>'
+                + '<a href="#" data-barcode="' + req[i]._id + '"><span  class="glyphicon glyphicon-trash" id="glyphDelete' + req[i]._id + '"></span></a>'
+                + '</small>'
+                + '</div>'
+                + '<p>'
+                + '<strong>Bestillingsnummer:</strong> <br>'
+                +  req[i].orderNumber
+                + '</p>'
+                + '</li></div>');
 
             $('#glyphEdit' + req[i]._id).on('click', () => {
                 editGoods(req[i]._id, req[i].name, req[i].isDryGoods);
@@ -159,6 +159,7 @@ $(document).ready(function () {
         $('#btnDatoliste').removeClass('active');
         $('#btnRegistrer').removeClass('active');
         $('#btnSortiment').removeClass('active');
+        $('#btnOpretBruger').removeClass('active');
     }
 
     $('#btnDatoliste').click(function () {
@@ -182,6 +183,12 @@ $(document).ready(function () {
         $('#btnSortiment').addClass('active');
     });
 
+    $('#btnOpretBruger').click(function () {
+        compileNewBody("opretBruger.hbs");
+        toggleButtons();
+        $('#btnOpretBruger').addClass('active');
+    });
+
     // gemmer det nye antal af varer
     $(document).on('click', '#saveBtn', (event)=> {
 
@@ -197,7 +204,7 @@ $(document).ready(function () {
             if(!$(event.target.parentNode.lastChild).hasClass("glyphicon glyphicon-ok")){
                 $(event.target.parentNode).append('<span id="saveBtn" class="glyphicon glyphicon-ok"></span>');
             }
-                $(event.target.parentNode.parentNode).fadeTo('slow', 0.5).fadeTo('slow', 1.0);
+            $(event.target.parentNode.parentNode).fadeTo('slow', 0.5).fadeTo('slow', 1.0);
         });
 
     });
@@ -235,6 +242,38 @@ $(document).ready(function () {
         registerExp(barcode, date, 0).then(() => {
             $('#selectedProductBarcode').val('');
             $('#expDate').val('');
+        });
+    });
+
+    $(document).on('click', '#btnCreateUser', ()=>{
+        $('#createUserFeedback').addClass('redText');
+        let userName = $('#createUserUserName').val();
+        if(userName.length == 0){
+            $('#createUserFeedback').text('Indtast brugernavn');
+            return;
+        }
+        let password = $('#createUserPassword').val();
+        if(password.length <5){
+            $('#createUserFeedback').text('Password skal være mindst 5 karakterer');
+            return;
+        }
+        $.get('/api/user/' + userName, (req, res) =>{
+            if(req){
+                var user = {
+                    name: userName,
+                    password: password
+                };
+                $.post('/api/users', user, () =>{
+                    $('#createUserFeedback').removeClass('redText');
+                    $('#createUserFeedback').addClass('greenText');
+                    $('#createUserFeedback').text('Bruger oprettet');
+                    $('#createUserUserName').val('');
+                    $('#createUserPassword').val('');
+                });
+            } else{
+                $('#createUserFeedback').text('Brugernavn i brug');
+                return;
+            }
         });
     });
 });

@@ -26,5 +26,15 @@ module.exports = (express) => {
                     res.status(500).send(err);
                 });
         });
+
+    router.route('/api/user/:username')
+        .get((req, res) =>{
+            controller.hasUsername(req.params.username).then((doc) =>{
+                res.status(200).json(doc[0] == undefined);
+            });
+
+
+
+        });
     return router;
 };
