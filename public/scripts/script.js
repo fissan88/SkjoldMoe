@@ -3,6 +3,8 @@
  */
 // RENDERING OF PAGES
 // =============================================================================
+var currentSelectedProduct;
+var tmpDates = [];
 
 function compileNewBody(templateName) {
     $.get('../views/' + templateName, function (template) {
@@ -120,6 +122,7 @@ function updateProduct(barcode, name, isDryGoods) {
 function addExpirationsToProduct(product) {
     $('#dateRegModal').modal("show");
     $('#dateRegModalBody').empty();
+    currentSelectedProduct = product;
 
     if(product.expirations.length > 0) {
         let req = product.expirations;
@@ -290,7 +293,38 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '#btnDateRegModalTilfoej', (event) => {
-        $('#dateRegModalModal').modal("show");
+        let newCollExp = {
+            barcode: currentSelectedProduct._id,
+            date: $('#dateRegDatePickerModal').val(),
+            quantity: 0
+        };
+        console.log("Skabt øbjekt: " + newCollExp + " validere");
+        if(newCollExp.barcode.length > 0)
+            console.log("trin 1");
+            if(newCollExp.date != '')
+            {
+                console.log("trin 2");
+                tmpDates.push(newCollExp);
+
+                $('#dateRegModalBody').append('<li class="list-group-item">'
+                    + '<label>'+newCollExp.date.slice(0,10) + '</label>'
+                    + '<div class="pull-right action-buttons">'
+                    + '<a href="#" data-barcode="' + newCollExp.barcode + '"><span class="glyphicon glyphicon-pencil" id="modalGlyphEdit' + newCollExp.barcode + '"></span></a>'
+                    + '<a href="#" data-barcode="' + newCollExp.barcode + '"><span  class="glyphicon glyphicon-trash" id="modalGlyphDelete' + newCollExp.barcode + '"></span></a>'
+                    + '</div></li>');
+
+                // $('#modalGlyphEdit' + req[i].barcode).on('click', () => {
+                //     editGoods(req[i].barcode, req[i].name, req[i].isDryGoods);
+                // });
+
+                // $('#modalGlyphDelete' + req[i].barcode).on('click', () => {
+                //     deleteGoods(req[i].barcode);
+                // });
+
+                newCollExp = '';
+                $('#dateRegDatePickerModal').val('');
+            }
+
     })
 
 });
