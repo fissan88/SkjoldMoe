@@ -13,11 +13,11 @@ function compileNewBody(templateName) {
     });
 }
 
-function populateProductsToRegister() {
+function populateProductsToRegister(targetContainer) {
     $.get('/api/productsToday', (req,res) => {
-        $('#dateRegList').empty();
+        $(targetContainer).empty();
         for (let i in req) {
-            $('#dateRegList').append('<li class="list-group-item">'
+            $(targetContainer).append('<li class="list-group-item">'
                 + '<label>'+req[i]._id + ' - ' + req[i].name+'</label>'
                 + '<div class="pull-right action-buttons">'
                 + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-plus" id="glyphRegisterExp' + req[i]._id + '"></span></a>'
@@ -122,7 +122,23 @@ function addExpirationsToProduct(product) {
     $('#dateRegModalBody').empty();
 
     if(product.expirations.length > 0) {
-        $('#dateRegModalBody').append("<p>" + product.expirations[0].date + "</p>");
+        let req = product.expirations;
+        for (let i in req) {
+            $('#dateRegModalBody').append('<li class="list-group-item">'
+                + '<label>'+req[i].date.slice(0,10) + '</label>'
+                + '<div class="pull-right action-buttons">'
+                + '<a href="#" data-barcode="' + req[i].barcode + '"><span class="glyphicon glyphicon-pencil" id="modalGlyphEdit' + req[i].barcode + '"></span></a>'
+                + '<a href="#" data-barcode="' + req[i].barcode + '"><span  class="glyphicon glyphicon-trash" id="modalGlyphDelete' + req[i].barcode + '"></span></a>'
+                + '</div></li>');
+
+            // $('#modalGlyphEdit' + req[i].barcode).on('click', () => {
+            //     editGoods(req[i].barcode, req[i].name, req[i].isDryGoods);
+            // });
+
+            // $('#modalGlyphDelete' + req[i].barcode).on('click', () => {
+            //     deleteGoods(req[i].barcode);
+            // });
+        }
     }
 
 };
@@ -188,7 +204,7 @@ $(document).ready(function () {
 
     $('#btnRegistrer').click(function () {
         compileNewBody("registrer.hbs");
-        populateProductsToRegister();
+        populateProductsToRegister('#tabRegAllContent');
         toggleButtons();
         $('#btnRegistrer').addClass('active');
     });
@@ -253,4 +269,28 @@ $(document).ready(function () {
             $('#expDate').val('');
         });
     });
+
+    $(document).on('click', '#tabRegAll', (event) => {
+        populateProductsToRegister('#tabRegAllContent');
+    });
+
+    $(document).on('click', '#tabRegFresh', (event) => {
+        $('#tabRegFreshContent').empty();
+        $('#tabRegFreshContent').append("med");
+    });
+
+    $(document).on('click', '#tabRegDried', (event) => {
+        $('#tabRegDriedContent').empty();
+        $('#tabRegDriedContent').append("dig");
+    });
+
+    $(document).on('click', '#tabRegFromDate', (event) => {
+        $('#tabRegFromDateContent').empty();
+        $('#tabRegFromDateContent').append("!");
+    });
+
+    $(document).on('click', '#btnDateRegModalTilfoej', (event) => {
+        $('#dateRegModalModal').modal("show");
+    })
+
 });

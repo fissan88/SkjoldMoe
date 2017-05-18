@@ -1,16 +1,32 @@
 <div  class="row">
     <div class="col-sm-12">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h1 class="panel-title">Varer der mangler registering:</h1>
-            </div>
-            <div class="panel-body">
-                <div id="dateRegPanel">
-                    <ul id="dateRegList">
+            <div class="panel with-nav-tabs panel-success">
+                <div class="panel-heading">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tabRegAllContent" id="tabRegAll" data-toggle="tab">Alle</a></li>
+                        <li><a href="#tabRegFreshContent" id="tabRegFresh" data-toggle="tab">Ferskvarer</a></li>
+                        <li><a href="#tabRegDriedContent" id="tabRegDried" data-toggle="tab">Tørvarer</a>
+                        <li><a href="#tabRegFromDateContent" id="tabRegFromDate" data-toggle="tab">Fra Dato</a></li>
+
+                        <!--<li class="dropdown">-->
+                            <!--<a href="#" data-toggle="dropdown">Dropdown <span class="caret"></span></a>-->
+                            <!--<ul class="dropdown-menu" role="menu">-->
+                                <!--<li><a href="#tab4success" data-toggle="tab">Success 4</a></li>-->
+                                <!--<li><a href="#tab5success" data-toggle="tab">Success 5</a></li>-->
+                            <!--</ul>-->
+                        <!--</li>-->
 
                     </ul>
                 </div>
-            </div>
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="tabRegAllContent"></div>
+                        <div class="tab-pane fade" id="tabRegFreshContent"></div>
+                        <div class="tab-pane fade" id="tabRegDriedContent"></div>
+                        <div class="tab-pane fade" id="tabRegFromDateContent"></div>
+                    </div>
+                </div>
+
         </div>
     </div>
 </div>
@@ -21,13 +37,40 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Tilføj udløbsdato</h4>
+                <h4 class="modal-title">Udløbsdato</h4>
             </div>
             <div class="modal-body" style="position: static" id="dateRegModalBody">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" data-dismiss="modal" id="btnDateRegModalTilfoej">Tilføj</button>
                 <button type="button" class="btn btn-success" data-dismiss="modal" id="btnDateRegModalGodkend">Godkend</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal" id="dateRegModalModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Vælg Dato</h4>
+            </div>
+            <div class="modal-body" style="position: static" id="dateRegModalModalBody">
+
+                <div class="form-group">
+
+                    <label for="date">Dato</label>
+                    <input type="date" class="form-control" id="dateModalModal">
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" id="btnDateRegModalModalOk">Ok</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" id="btnDateRegModalModalAnnuller">Annuller</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
