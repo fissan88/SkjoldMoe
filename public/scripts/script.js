@@ -151,6 +151,9 @@ function addItemsToExpirationLists(){
 
 $(document).ready(function () {
     addItemsToExpirationLists();
+    compileNewBody("index.hbs");
+    toggleButtons();
+    $('#btnDatoliste').addClass('active');
 
 // BUTTON ACTIONS
 // =============================================================================

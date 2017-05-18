@@ -9,16 +9,22 @@
             $("#btnLogin").click(function(){
                 username=$("#loginUsername").val();
                 password=$("#loginPassword").val();
-                /*
-                 * Perform some validation here.
-                 */
-                window.location.href="/index";
 
-
-                $.post("http://localhost:3000/login",{email:username,pass:pass},function(data){
+                if(username.length == 0){
+                    $('#LoginFeedback').text('Indtast brugernavn');
+                    return;
+                }
+                if(password.length == 0){
+                    $('#LoginFeedback').text('Indtast password');
+                    return;
+                }
+                
+                $.post("http://localhost:8080/login",{username:username,password:password},function(data){
                     if(data==='done')
                     {
-                        window.location.href="/index.hbs";
+                        window.location.href="/index";
+                    } else{
+                        $('#LoginFeedback').text('forkert brugernavn eller password');
                     }
                 });
             });
@@ -26,8 +32,20 @@
     </script>
 </head>
 <body>
-<input type="text" size="40" placeholder="Type your email" id="loginUsername"><br />
-<input type="password" size="40" placeholder="Type your password" id="loginPassword"><br />
-<input type="button" value="Login" id="btnLogin">
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h1 class="panel-title">Login</h1>
+            </div>
+            <div class="panel-body">
+                <input id="loginUsername" class="form-control" type="text" placeholder="Brugernavn">
+                <input id="loginPassword" class="form-control" type="password" placeholder="Password">
+                <button id="btnLogin" type="button" class="btn btn-success btn-block">Login</button>
+                <p id="LoginFeedback"></p>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
