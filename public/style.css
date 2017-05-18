@@ -30,30 +30,6 @@
     color: red;
 }
 
-.jumbotron {
-    background-color: red;
-    color: white;
-}
-
-.btn.active {
-    background-color: darkred;
-}
-
-.btn {
-    background-color: red;
-}
-
-.btn:hover {
-    background-color: orangered;
-}
-
-.btn.active:hover {
-    background-color: orangered;
-}
-
-.panel-heading {
-    color: red;
-}
 #numSelect {
     width: 40px;
 }
