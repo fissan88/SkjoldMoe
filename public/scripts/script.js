@@ -3,6 +3,9 @@
  */
 // RENDERING OF PAGES
 // =============================================================================
+var currentSelectedProduct;
+var tmpDates = [];
+var newCollExp;
 
 function compileNewBody(templateName) {
     $.get('../views/' + templateName, function (template) {
@@ -10,6 +13,40 @@ function compileNewBody(templateName) {
         let compiled = Handlebars.compile(template);
         let html = compiled({});
         $('#container').append(html);
+    });
+}
+
+function populateProductsToRegister(targetContainer) {
+    $.get('/api/productsToday', (req,res) => {
+        $(targetContainer).empty();
+        for (let i in req) {
+            $(targetContainer).append('<li class="list-group-item">'
+                + '<label>'+req[i]._id + ' - ' + req[i].name+'</label>'
+                + '<div class="pull-right action-buttons">'
+                + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-plus" id="glyphRegisterExp' + req[i]._id + '"></span></a>'
+                + '</div></li>');
+
+            $('#glyphRegisterExp' + req[i]._id).on('click', () => {
+                    addExpirationsToProduct(req[i]);
+            });
+        }
+    });
+}
+
+function populateProductsToRegisterDriedGoods(targetContainer, isDryGoods) {
+    $.get('/api/productsToday/' + isDryGoods, (req,res) => {
+        $(targetContainer).empty();
+        for (let i in req) {
+            $(targetContainer).append('<li class="list-group-item">'
+                + '<label>'+req[i]._id + ' - ' + req[i].name+'</label>'
+                + '<div class="pull-right action-buttons">'
+                + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-plus" id="glyphRegisterExp' + req[i]._id + '"></span></a>'
+                + '</div></li>');
+
+            $('#glyphRegisterExp' + req[i]._id).on('click', () => {
+                addExpirationsToProduct(req[i]);
+            });
+        }
     });
 }
 
@@ -46,6 +83,11 @@ function populateSortimentList() {
         }
     });
 }
+
+function removeTempDate() {
+    tmpDates.splice(tmpDates.indexOf(newCollExp), 1);
+    $(this).closest('li').remove();
+};
 
 // FUNCTIONS GETTING FROM SERVER
 // =============================================================================
@@ -111,9 +153,30 @@ function updateProduct(barcode, name, isDryGoods) {
     });
 }
 
-function addItemsToExpirationLists() {
-    $.get('/api/collExpirations', (req, res) => {
+function addExpirationsToProduct(product) {
+    $('#dateRegModal').modal("show");
+    $('#dateRegModalBody').empty();
+    currentSelectedProduct = product;
+
+    if(product.expirations.length > 0) {
+        let req = product.expirations;
         for (let i in req) {
+            $('#dateRegModalBody').append('<li class="list-group-item">'
+                + '<label>'+req[i].date.slice(0,10) + '</label>'
+                + '<div class="pull-right action-buttons">'
+                + '<a href="#" data-barcode="' + req[i].barcode + '"><span  class="glyphicon glyphicon-trash" id="modalGlyphDelete' + req[i].barcode + '"></span></a>'
+                + '</div></li>');
+            $('#modalGlyphDelete' + req[i].barcode).click(() => {
+
+            });
+        }
+    }
+
+};
+
+function addItemsToExpirationLists(){
+    $.get('/api/collExpirations', (req, res) =>{
+        for(let i in req){
             var currentDate = new Date;
             var month = currentDate.getMonth();
             month = monthConverter(month);
@@ -200,7 +263,7 @@ $(document).ready(function () {
     // loader registrer.hbs og opdatere jumbotron
     $('#btnRegistrer').click(function () {
         compileNewBody("registrer.hbs");
-        populateSortimentList();
+        populateProductsToRegister('#tabRegAllContent');
         toggleButtons();
         $('#btnRegistrer').addClass('active');
         document.getElementById("subtitle").innerHTML = "Liste over varer med manglende datoregistring, samt datoregistring af varer";
@@ -230,7 +293,8 @@ $(document).ready(function () {
     });
 
     // gemmer det nye antal af varer
-    $(document).on('click', '#saveBtn', (event) => {
+
+    $(document).on('click', '#saveBtn', (event)=> {
 
         var id = $(event.target.parentNode.parentNode).data('id');
         var quantity = $(event.target.parentNode.previousSibling.firstChild).val();
@@ -270,11 +334,9 @@ $(document).ready(function () {
         });
     });
 
-
     $(document).on('click', 'li', (event) => {
         $('#selectedProductBarcode').val($(event.target).data('barcode'));
     });
-
 
     $(document).on('click', '#btnCreateExpiration', function () {
         let barcode = $('#selectedProductBarcode').val();
@@ -319,4 +381,61 @@ $(document).ready(function () {
             }
         });
     });
+
+    $(document).on('click', '#tabRegAll', (event) => {
+        populateProductsToRegister('#tabRegAllContent');
+    });
+
+    $(document).on('click', '#tabRegFresh', (event) => {
+        populateProductsToRegisterDriedGoods('#tabRegFreshContent', "true");
+    });
+
+    $(document).on('click', '#tabRegDried', (event) => {
+        populateProductsToRegisterDriedGoods('#tabRegDriedContent', "false");
+    });
+
+    $(document).on('click', '#tabRegFromDate', (event) => {
+        $('#tabRegFromDateContent').empty();
+        $('#tabRegFromDateContent').append("Coming soon this christmasX!");
+    });
+
+    $(document).on('click', '#btnDateRegModalGodkend', (event) => {
+
+        let promises = [];
+
+        for(let i = 0; i < tmpDates.length; i++) {
+            promises.push(registerExp(tmpDates[i].barcode, tmpDates[i].date, tmpDates[i].quantity));
+        }
+
+        Promise.all(promises).then(() => {
+            populateProductsToRegister('#tabRegAllContent');
+        })
+
+    });
+
+    //Sletning af det enkelte element fungerer ikke!
+    $(document).on('click', '#btnDateRegModalTilfoej', (event) => {
+        newCollExp = {
+            barcode: currentSelectedProduct._id,
+            date: $('#dateRegDatePickerModal').val(),
+            quantity: 0
+        };
+
+        if(newCollExp.barcode.length > 0)
+            if(newCollExp.date != '')
+            {
+                console.log("trin 2");
+                tmpDates.push(newCollExp);
+
+                $('#dateRegModalBody').append('<li class="list-group-item">'
+                    + '<label>'+newCollExp.date.slice(0,10) + '</label>'
+                    + '<div class="pull-right action-buttons">'
+                    + '<a href="#" data-barcode="' + newCollExp.date + '"><span  class="glyphicon glyphicon-trash" onclick="removeTempDate()"></span></a>'
+                    + '</div></li>');
+
+                newCollExp = '';
+                $('#dateRegDatePickerModal').val('');
+            }
+
+    })
 });

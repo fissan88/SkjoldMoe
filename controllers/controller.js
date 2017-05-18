@@ -17,8 +17,6 @@ exports.createCollExpiration = (barcode, date, quantity) => {
     return tmpItem;
 };
 
-
-
 exports.getCollExpiration = (barcode, date, quantity) => {
     let query = collExp.findOne({barcode: barcode, date: date, quantity: quantity});
     return query.exec(function (err, docs) {
@@ -60,6 +58,19 @@ function deleteExpirationsByBarcode(barcode) {
         }
     });
 }
+
+exports.getExpByBarcodeToday = (id) => {
+    let today = new Date();
+    today.setUTCHours(0,0,0,0);
+
+    let query = collExp.find({barcode: id, date: {$gte: today}});
+    return query.exec((err, docs) => {
+        if (err) return err;
+        else {
+            return docs;
+        }
+    });
+};
 
 exports.deleteProduct = (id) => {
     deleteExpirationsByBarcode(id);
@@ -121,7 +132,7 @@ exports.createProduct = function (id, name, isDryGoods, orderNumber) {
 
             newProduct.save().then(resolve);
         } else {
-            reject();
+           reject();
         }
     });
 };
@@ -145,6 +156,184 @@ exports.getCollProductById = (id) => {
     return query.exec((err,docs) => {
         if(err) return err;
         else return docs;
+    });
+};
+
+//TODO: sender en liste med expirations fra i dag / ligger lige nu i script på klientsiden
+exports.getExpToday = (inputDate) => {
+    var query = collExp.find({date: inputDate});
+    return query.exec(function (err, docs) {
+        if (err) return err;
+        else {
+            return docs;
+        }
+    });
+};
+
+
+// exports.getProductsFromToday = () => {
+//     return new Promise((resolve, reject) => {
+//         let tempArr = [];
+//         let inputDate = new Date();
+//         inputDate.setUTCHours(0, 0, 0, 0);
+//         let query = collExp.find({date: inputDate});
+//
+//         query.exec(function (err, docs) {
+//             return docs;
+//         }).then((docs) => {
+//             return new Promise((resolve, reject) => {
+//                 for (let i = 0; i < docs.length; i++) {
+//                     tempArr.push(docs[i].barcode);
+//                 }
+//                 resolve();
+//             })
+//         }).then(() => {
+//             return new Promise((resolve, reject) => {
+//                 let query = collProduct.find({_id: tempArr});
+//                 query.exec(function (err, docs) {
+//                     if (err) {
+//                         return err;
+//                     } else resolve(docs);
+//                 });
+//             })
+//         }).then((docs) => {
+//             resolve(docs);
+//         });
+//     });
+// };
+
+exports.getProductsToday = () => {
+    return new Promise((resolve, reject) => {
+        let today = new Date();
+        today.setUTCHours(0,0,0,0);
+
+        let query = collProduct.aggregate([{
+            $lookup:
+                {
+                    from: 'collExpirations',
+                    localField: '_id',
+                    foreignField: 'barcode',
+                    as: 'expirations'
+                }
+        }]);
+
+        query.exec(function (err, docs) {
+
+            if (err) {
+                reject(err);
+            } else {
+                let tmpArr = [];
+
+                for(let i = 0; i < docs.length; i++) {
+                    if(docs[i].expirations.length === 0) {
+                        tmpArr.push(docs[i]);
+                    } else {
+                        let latestDate = docs[i].expirations[0];
+
+                        for(let n = 0; n < docs[i].expirations.length; n++) {
+                            let tempExpiration = docs[i].expirations[n].date;
+                            tempExpiration.setUTCHours(0,0,0,0);
+                            console.log(tempExpiration);
+
+
+                            if(tempExpiration >= today) {
+                                latestDate = tempExpiration;
+                            }
+                        }
+
+                        if(latestDate.toString() == today.toString()) {
+                            tmpArr.push(docs[i])
+                        }
+                    }
+                }
+                resolve(tmpArr);
+            }
+        });
+    });
+};
+
+exports.filterGetProductsTodayByIsDryGoods = (isDryGoods) => {
+        return new Promise((resolve, reject) => {
+            let today = new Date();
+            today.setUTCHours(0,0,0,0);
+            let tempBoolean = (isDryGoods == 'true');
+
+            let query = collProduct.aggregate([
+                {
+                    $match: {isDryGoods: tempBoolean}
+                },
+                {
+                    $lookup:
+                        {
+                            from: 'collExpirations',
+                            localField: '_id',
+                            foreignField: 'barcode',
+                            as: 'expirations'
+                        }
+                }
+            ]);
+
+            query.exec(function (err, docs) {
+
+                if (err) {
+                    reject(err);
+                } else {
+                    let tmpArr = [];
+
+                    for(let i = 0; i < docs.length; i++) {
+                            if(docs[i].expirations.length === 0) {
+                                tmpArr.push(docs[i]);
+                            } else {
+                                let latestDate = docs[i].expirations[0];
+
+                                for(let n = 0; n < docs[i].expirations.length; n++) {
+                                    let tempExpiration = docs[i].expirations[n].date;
+                                    tempExpiration.setUTCHours(0,0,0,0);
+
+                                    if(tempExpiration >= today) {
+                                        latestDate = tempExpiration;
+                                    }
+                                }
+
+                                if(latestDate.toString() == today.toString()) {
+                                    tmpArr.push(docs[i])
+                                }
+                            }
+                    }
+                    resolve(tmpArr);
+                }
+            });
+        });
+};
+
+exports.filterGetProductsTodayByDate = (date) => {
+    return new Promise((resolve, reject) => {
+        date.setUTCHours(0,0,0,0);
+
+        let query = collProduct
+            .aggregate([{
+            $lookup:
+                {
+                    from: 'collExpirations',
+                    localField: '_id',
+                    foreignField: 'barcode',
+                    as: 'expirations'
+                }}]);
+
+        query.exec(function (err, docs) {
+            if (err) {
+                reject(err);
+            } else {
+                let tmpArr = [];
+
+                for(let i = 0; i < docs.length; i++) {
+                    if(docs[i].expirations.length > 0 && docs[i].expirations[0].date.toString() === date.toString()) {
+                        tmpArr.push(docs[i]);
+                    }
+                }
+                resolve(tmpArr);
+            }
+        });
     });
 };
 

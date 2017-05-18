@@ -15,7 +15,6 @@ module.exports = (express) => {
             });
         })
         .post((req, res) => {
-            console.log(req.body._id + " " +  req.body.name + " " + req.body.isDryGoods + " " + req.body.orderNumber);
             controller.createProduct(req.body._id, req.body.name, req.body.isDryGoods, req.body.orderNumber)
                 .then(function() {
                     res.json({message: 'Product saved!'});
@@ -54,7 +53,7 @@ module.exports = (express) => {
             item.then(function (doc) {
                 if (doc) {
                     res.status(200).json(doc);
-                } else res.status(418).json('I\'m a teapot');
+                } else res.status(418).json('I'm a teapot');
             })
 
         })
@@ -68,5 +67,42 @@ module.exports = (express) => {
                 res.status(200).json({message: "Varen blev slettet succesfuldt."});
             }
         });
+
+    router.route('/api/productsToday')
+        .get((req, res) => {
+            let getPro = controller.getProductsToday();
+            getPro.then((docs) => {
+                if(docs) {
+                    res.status(200).json(docs);
+                } else {
+                    res.status(418).json('I am a teapot');
+                }
+            });
+        });
+
+    router.route('/api/productsToday/:isDryGoods')
+        .get((req, res) => {
+            let getPro = controller.filterGetProductsTodayByIsDryGoods(req.params.isDryGoods);
+            getPro.then((docs) => {
+                if(docs) {
+                    res.status(200).json(docs);
+                } else {
+                    res.status(418).json('I am a teapot');
+                }
+            });
+        });
+
+    // router.route('/api/productsTodayFilterByDate/:date')
+    //     .get((req, res) => {
+    //         let getPro = controller.filterGetProductsTodayByDate(req.params.date);
+    //         getPro.then((docs) => {
+    //             if(docs) {
+    //                 res.status(200).json(docs);
+    //             } else {
+    //                 res.status(418).json('I am a teapot');
+    //             }
+    //         });
+    //     });
+
     return router;
 };
