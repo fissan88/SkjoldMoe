@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const handlebars = require('hbs');
-
+const session = require('express-session');
 // INITIALIZATION
 // =============================================================================
 app.set('port', (process.env.PORT || 8080)); // Set the port
@@ -40,6 +40,24 @@ app.use(usersRouter);
 //Setup views
 app.set('view engine', 'hbs');
 app.set('views', './public/views');
+
+app.use(session({secret: 'ssshhhh'}));
+
+var sess;
+
+app.get('/', (req, res) => {
+   sess = req.session;
+
+   sess.user;
+   sess.password;
+
+
+   if(sess.user) {
+       res.redirect('login.hbs');
+   } else {
+       res.render('login.hbs');
+   }
+});
 
 
 // START THE SERVER

@@ -7,7 +7,7 @@ var router = express.Router();
 module.exports = function (express) {
 
 
-    router.route('/')
+    router.route('/index')
         .get(function (req, res) {
             res.render('index', {
             });
