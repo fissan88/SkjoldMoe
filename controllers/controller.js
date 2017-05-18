@@ -216,15 +216,116 @@ exports.getProductsToday = () => {
         }]);
 
         query.exec(function (err, docs) {
+
             if (err) {
                 reject(err);
             } else {
                 let tmpArr = [];
 
                 for(let i = 0; i < docs.length; i++) {
-                    if(docs[i].expirations.length == 0) {
+                    if(docs[i].expirations.length === 0) {
                         tmpArr.push(docs[i]);
-                    } else if(docs[i].expirations.length == 1 && docs[i].expirations[0].date.toString() === today.toString()) {
+                    } else {
+                        let latestDate = docs[i].expirations[0];
+
+                        for(let n = 0; n < docs[i].expirations.length; n++) {
+                            let tempExpiration = docs[i].expirations[n].date;
+                            tempExpiration.setUTCHours(0,0,0,0);
+                            console.log(tempExpiration);
+
+
+                            if(tempExpiration.toString() >= today.toString()) {
+                                latestDate = tempExpiration;
+                            }
+                        }
+
+                        if(latestDate.toString() == today.toString()) {
+                            tmpArr.push(docs[i])
+                        }
+                    }
+                }
+                resolve(tmpArr);
+            }
+        });
+    });
+};
+
+exports.filterGetProductsTodayByIsDryGoods = (isDryGoods) => {
+        return new Promise((resolve, reject) => {
+            let today = new Date();
+            today.setUTCHours(0,0,0,0);
+            let tempBoolean = (isDryGoods == 'true');
+
+            let query = collProduct.aggregate([
+                {
+                    $match: {isDryGoods: tempBoolean}
+                },
+                {
+                    $lookup:
+                        {
+                            from: 'collExpirations',
+                            localField: '_id',
+                            foreignField: 'barcode',
+                            as: 'expirations'
+                        }
+                }
+            ]);
+
+            query.exec(function (err, docs) {
+
+                if (err) {
+                    reject(err);
+                } else {
+                    let tmpArr = [];
+
+                    for(let i = 0; i < docs.length; i++) {
+                            if(docs[i].expirations.length === 0) {
+                                tmpArr.push(docs[i]);
+                            } else {
+                                let latestDate = docs[i].expirations[0];
+
+                                for(let n = 0; n < docs[i].expirations.length; n++) {
+                                    let tempExpiration = docs[i].expirations[n].date;
+                                    tempExpiration.setUTCHours(0,0,0,0);
+
+                                    if(tempExpiration.toString() >= today.toString()) {
+                                        latestDate = tempExpiration;
+                                    }
+                                }
+
+                                if(latestDate.toString() == today.toString()) {
+                                    tmpArr.push(docs[i])
+                                }
+                            }
+                    }
+                    resolve(tmpArr);
+                }
+            });
+        });
+};
+
+exports.filterGetProductsTodayByDate = (date) => {
+    return new Promise((resolve, reject) => {
+        date.setUTCHours(0,0,0,0);
+
+        let query = collProduct
+            .aggregate([{
+            $lookup:
+                {
+                    from: 'collExpirations',
+                    localField: '_id',
+                    foreignField: 'barcode',
+                    as: 'expirations'
+                }}]);
+
+        query.exec(function (err, docs) {
+            if (err) {
+                reject(err);
+            } else {
+                let tmpArr = [];
+
+                for(let i = 0; i < docs.length; i++) {
+                    if(docs[i].expirations.length > 0 && docs[i].expirations[0].date.toString() === date.toString()) {
                         tmpArr.push(docs[i]);
                     }
                 }
@@ -232,5 +333,4 @@ exports.getProductsToday = () => {
             }
         });
     });
-
 };
