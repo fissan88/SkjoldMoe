@@ -5,6 +5,7 @@
 // =============================================================================
 var currentSelectedProduct;
 var tmpDates = [];
+var newCollExp;
 
 function compileNewBody(templateName) {
     $.get('../views/' + templateName, function (template) {
@@ -71,6 +72,11 @@ function populateSortimentList() {
         }
     });
 }
+
+function removeTempDate() {
+    tmpDates.splice(tmpDates.indexOf(newCollExp), 1);
+    $(this).closest('li').remove();
+};
 
 // FUNCTIONS GETTING FROM SERVER
 // =============================================================================
@@ -147,17 +153,11 @@ function addExpirationsToProduct(product) {
             $('#dateRegModalBody').append('<li class="list-group-item">'
                 + '<label>'+req[i].date.slice(0,10) + '</label>'
                 + '<div class="pull-right action-buttons">'
-                + '<a href="#" data-barcode="' + req[i].barcode + '"><span class="glyphicon glyphicon-pencil" id="modalGlyphEdit' + req[i].barcode + '"></span></a>'
                 + '<a href="#" data-barcode="' + req[i].barcode + '"><span  class="glyphicon glyphicon-trash" id="modalGlyphDelete' + req[i].barcode + '"></span></a>'
                 + '</div></li>');
+            $('#modalGlyphDelete' + req[i].barcode).click(() => {
 
-            // $('#modalGlyphEdit' + req[i].barcode).on('click', () => {
-            //     editGoods(req[i].barcode, req[i].name, req[i].isDryGoods);
-            // });
-
-            // $('#modalGlyphDelete' + req[i].barcode).on('click', () => {
-            //     deleteGoods(req[i].barcode);
-            // });
+            });
         }
     }
 
@@ -238,6 +238,7 @@ $(document).ready(function () {
 
     // TODO skal have opdateret vores varer på listen med en ny glyphicon og antal
     // gemmer det nye antal af varer
+
     $(document).on('click', '#saveBtn', (event)=> {
 
         var id = $(event.target.parentNode.parentNode).data('id');
@@ -321,15 +322,15 @@ $(document).ready(function () {
 
     });
 
+    //Sletning af det enkelte element fungerer ikke!
     $(document).on('click', '#btnDateRegModalTilfoej', (event) => {
-        let newCollExp = {
+        newCollExp = {
             barcode: currentSelectedProduct._id,
             date: $('#dateRegDatePickerModal').val(),
             quantity: 0
         };
-        console.log("Skabt øbjekt: " + newCollExp + " validere");
+
         if(newCollExp.barcode.length > 0)
-            console.log("trin 1");
             if(newCollExp.date != '')
             {
                 console.log("trin 2");
@@ -338,22 +339,12 @@ $(document).ready(function () {
                 $('#dateRegModalBody').append('<li class="list-group-item">'
                     + '<label>'+newCollExp.date.slice(0,10) + '</label>'
                     + '<div class="pull-right action-buttons">'
-                    + '<a href="#" data-barcode="' + newCollExp.barcode + '"><span class="glyphicon glyphicon-pencil" id="modalGlyphEdit' + newCollExp.barcode + '"></span></a>'
-                    + '<a href="#" data-barcode="' + newCollExp.barcode + '"><span  class="glyphicon glyphicon-trash" id="modalGlyphDelete' + newCollExp.barcode + '"></span></a>'
+                    + '<a href="#" data-barcode="' + newCollExp.date + '"><span  class="glyphicon glyphicon-trash" onclick="removeTempDate()"></span></a>'
                     + '</div></li>');
-
-                // $('#modalGlyphEdit' + req[i].barcode).on('click', () => {
-                //     editGoods(req[i].barcode, req[i].name, req[i].isDryGoods);
-                // });
-
-                // $('#modalGlyphDelete' + req[i].barcode).on('click', () => {
-                //     deleteGoods(req[i].barcode);
-                // });
 
                 newCollExp = '';
                 $('#dateRegDatePickerModal').val('');
             }
 
     })
-
 });
