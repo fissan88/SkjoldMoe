@@ -19,7 +19,7 @@
                     return;
                 }
                 
-                $.post("http://localhost:8080/login",{username:username,password:password},function(data){
+                $.post("/login",{username:username,password:password},function(data){
                     if(data==='done')
                     {
                         window.location.href="/index";
