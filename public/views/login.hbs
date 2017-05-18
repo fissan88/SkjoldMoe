@@ -4,19 +4,21 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
         $(document).ready(function(){
-            var email,pass;
-            $("#submit").click(function(){
-                email=$("#email").val();
-                pass=$("#password").val();
-
-
+            let username;
+            let password;
+            $("#btnLogin").click(function(){
+                username=$("#loginUsername").val();
+                password=$("#loginPassword").val();
                 /*
                  * Perform some validation here.
                  */
-                $.post("http://localhost:3000/login",{email:email,pass:pass},function(data){
+                window.location.href="/index";
+
+
+                $.post("http://localhost:3000/login",{email:username,pass:pass},function(data){
                     if(data==='done')
                     {
-                        window.location.href="/admin";
+                        window.location.href="/index.hbs";
                     }
                 });
             });
@@ -24,8 +26,8 @@
     </script>
 </head>
 <body>
-<input type="text" size="40" placeholder="Type your email" id="email"><br />
-<input type="password" size="40" placeholder="Type your password" id="password"><br />
-<input type="button" value="Submit" id="submit">
+<input type="text" size="40" placeholder="Type your email" id="loginUsername"><br />
+<input type="password" size="40" placeholder="Type your password" id="loginPassword"><br />
+<input type="button" value="Login" id="btnLogin">
 </body>
 </html>

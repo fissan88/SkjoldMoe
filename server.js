@@ -47,16 +47,26 @@ var sess;
 
 app.get('/', (req, res) => {
    sess = req.session;
-
-   sess.user;
-   sess.password;
-
-
    if(sess.user) {
-       res.redirect('login.hbs');
+       res.redirect('index.hbs');
    } else {
        res.render('login.hbs');
    }
+});
+
+app.post('/login', (req, res) => {
+    sess = req.session;
+    sess.username = req.body.username;
+    res.end('done');
+});
+
+app.get('/index', (req, res) => {
+    sess = req.session;
+    if(sess.username) {
+        res.render('index.hbs');
+    } else {
+        res.write('<h1>Please login first.</h1>');
+    }
 });
 
 

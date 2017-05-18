@@ -9,7 +9,7 @@ module.exports = function (express) {
 
     router.route('/index')
         .get(function (req, res) {
-            res.render('index', {
+            res.render('layout2', {
             });
         })
         .post(function (req, res) {
