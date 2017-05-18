@@ -11,10 +11,12 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
+    "express-session": "^1.15.3",
     "hbs": "^4.0.1",
     "mocha": "^3.3.0",
     "mongoose": "^4.9.3",
     "morgan": "^1.8.1",
+    "quagga": "^0.11.6",
     "should": "^11.2.1",
     "supertest": "^3.0.0"
   }

@@ -173,15 +173,20 @@ $(document).on('keyup', '#search', function () {
 // når siden er klar, bliver følgende funktioner og toggles loadet.
 $(document).ready(function () {
     addItemsToExpirationLists();
+    compileNewBody("index.hbs");
+    toggleButtons();
+    $('#btnDatoliste').addClass('active');
+
+// BUTTON ACTIONS
+// =============================================================================
 
     function toggleButtons() {
         $('#btnDatoliste').removeClass('active');
         $('#btnRegistrer').removeClass('active');
         $('#btnSortiment').removeClass('active');
+        $('#btnOpretBruger').removeClass('active');
     }
 
-// BUTTON ACTIONS
-// =============================================================================
 
     // loader index.hbs og opdatere jumbotron
     $('#btnDatoliste').click(function () {
@@ -208,6 +213,12 @@ $(document).ready(function () {
         toggleButtons();
         $('#btnSortiment').addClass('active');
         document.getElementById("subtitle").innerHTML = "Liste over sortimentet, samt tilføjelse til sortiment";
+    });
+
+    $('#btnOpretBruger').click(function () {
+        compileNewBody("opretBruger.hbs");
+        toggleButtons();
+        $('#btnOpretBruger').addClass('active');
     });
 
     // loader index.hbs og opdatere jumbotron
@@ -274,6 +285,38 @@ $(document).ready(function () {
         registerExp(barcode, date, 0).then(() => {
             $('#selectedProductBarcode').val('');
             $('#expDate').val('');
+        });
+    });
+
+    $(document).on('click', '#btnCreateUser', ()=>{
+        $('#createUserFeedback').addClass('redText');
+        let userName = $('#createUserUserName').val();
+        if(userName.length == 0){
+            $('#createUserFeedback').text('Indtast brugernavn');
+            return;
+        }
+        let password = $('#createUserPassword').val();
+        if(password.length <5){
+            $('#createUserFeedback').text('Password skal være mindst 5 karakterer');
+            return;
+        }
+        $.get('/api/user/' + userName, (req, res) =>{
+            if(req){
+                var user = {
+                    name: userName,
+                    password: password
+                };
+                $.post('/api/users', user, () =>{
+                    $('#createUserFeedback').removeClass('redText');
+                    $('#createUserFeedback').addClass('greenText');
+                    $('#createUserFeedback').text('Bruger oprettet');
+                    $('#createUserUserName').val('');
+                    $('#createUserPassword').val('');
+                });
+            } else{
+                $('#createUserFeedback').text('Brugernavn i brug');
+                return;
+            }
         });
     });
 });

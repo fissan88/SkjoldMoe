@@ -84,3 +84,11 @@ canvas.drawing, canvas.drawingBuffer {
     left: 0;
     top: 0;
 }
+
+.greenText {
+    color: green;
+}
+
+.redText {
+    color: red;
+}

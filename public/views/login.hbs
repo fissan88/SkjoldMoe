@@ -1,0 +1,51 @@
+<html>
+<head>
+    <title>Session Management in NodeJS using Express4.2</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            let username;
+            let password;
+            $("#btnLogin").click(function(){
+                username=$("#loginUsername").val();
+                password=$("#loginPassword").val();
+
+                if(username.length == 0){
+                    $('#LoginFeedback').text('Indtast brugernavn');
+                    return;
+                }
+                if(password.length == 0){
+                    $('#LoginFeedback').text('Indtast password');
+                    return;
+                }
+                
+                $.post("http://localhost:8080/login",{username:username,password:password},function(data){
+                    if(data==='done')
+                    {
+                        window.location.href="/index";
+                    } else{
+                        $('#LoginFeedback').text('forkert brugernavn eller password');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h1 class="panel-title">Login</h1>
+            </div>
+            <div class="panel-body">
+                <input id="loginUsername" class="form-control" type="text" placeholder="Brugernavn">
+                <input id="loginPassword" class="form-control" type="password" placeholder="Password">
+                <button id="btnLogin" type="button" class="btn btn-success btn-block">Login</button>
+                <p id="LoginFeedback"></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

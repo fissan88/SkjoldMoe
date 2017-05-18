@@ -3,6 +3,7 @@
  */
 const collExp = require('../models/collExpirations');
 const collProduct = require('../models/product');
+const collUsers = require('../models/user');
 const BARCODE_REGEX = /^\d{8}|\d{13}|\d{15}$/;
 const mongoose = require('mongoose');
 
@@ -16,8 +17,10 @@ exports.createCollExpiration = (barcode, date, quantity) => {
     return tmpItem;
 };
 
+
+
 exports.getCollExpiration = (barcode, date, quantity) => {
-    var query = collExp.findOne({barcode: barcode, date: date, quantity: quantity});
+    let query = collExp.findOne({barcode: barcode, date: date, quantity: quantity});
     return query.exec(function (err, docs) {
         if (err) return err;
         else {
@@ -27,7 +30,7 @@ exports.getCollExpiration = (barcode, date, quantity) => {
 };
 
 exports.getAllCollExpirations = () => {
-    var query = collExp.find({});
+    let query = collExp.find({});
     return query.exec(function (err, docs) {
         if (err) return err;
         else {
@@ -68,7 +71,6 @@ exports.deleteProduct = (id) => {
             }
         })
     });
-
 };
 
 exports.getCollExpirationById = (id) => {
@@ -78,7 +80,7 @@ exports.getCollExpirationById = (id) => {
 };
 
 exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
-    var query = collExp.findByIdAndUpdate(oldId, {
+    let query = collExp.findByIdAndUpdate(oldId, {
         barcode: newBarcode,
         date: newDate,
         quantity: newQuantity
@@ -92,7 +94,7 @@ exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
 };
 
 exports.updateQuantityCollExpiration = (id, quantity, isChecked) => {
-    var query = collExp.findByIdAndUpdate(id, {
+    let query = collExp.findByIdAndUpdate(id, {
         quantity: quantity,
         isChecked: isChecked
     }, {new: true});
@@ -119,7 +121,7 @@ exports.createProduct = function (id, name, isDryGoods, orderNumber) {
 
             newProduct.save().then(resolve);
         } else {
-           reject();
+            reject();
         }
     });
 };
@@ -139,7 +141,7 @@ exports.updateCollProducts = (id, newName, newIsDryGoods) => {
 
 exports.getCollProductById = (id) => {
 
-    var query =  collProduct.findById(id);
+    let query =  collProduct.findById(id);
     return query.exec((err,docs) => {
         if(err) return err;
         else return docs;
@@ -148,9 +150,35 @@ exports.getCollProductById = (id) => {
 
 exports.getCollProductByOrderNumber = orderNumber => {
 
-    var query =  collProduct.find({"orderNumber": orderNumber});
+    let query =  collProduct.find({"orderNumber": orderNumber});
     return query.exec((err,docs) => {
         if(err) return err;
         else return docs;
     });
 };
+
+// Opretter en ny bruger i systemet.
+exports.createUser = function (name, password) {
+    return new Promise ((resolve, reject) => {
+        if (true) {
+            let newUser = new collUsers({
+                name: name,
+                password: password
+            });
+
+            newUser.save().then(resolve);
+        } else {
+            reject();
+        }
+    });
+};
+
+exports.hasUsername = function (username) {
+    let query =  collUsers.find({"name": username});
+    return query.exec((err,docs) => {
+        if(err) return err;
+        else {
+            return docs;
+        }
+    });
+}
