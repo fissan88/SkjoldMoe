@@ -53,7 +53,7 @@ module.exports = (express) => {
             item.then(function (doc) {
                 if (doc) {
                     res.status(200).json(doc);
-                } else res.status(418).json('I'm a teapot');
+                } else res.status(418).json("I'm a teapot");
             })
 
         })
@@ -75,7 +75,7 @@ module.exports = (express) => {
                 if(docs) {
                     res.status(200).json(docs);
                 } else {
-                    res.status(418).json('I am a teapot');
+                    res.status(418).json("I am a teapot");
                 }
             });
         });
@@ -87,7 +87,7 @@ module.exports = (express) => {
                 if(docs) {
                     res.status(200).json(docs);
                 } else {
-                    res.status(418).json('I am a teapot');
+                    res.status(418).json("I am a teapot");
                 }
             });
         });
