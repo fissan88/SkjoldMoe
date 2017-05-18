@@ -217,7 +217,7 @@ $(document).ready(function () {
         $('#btnDatoliste').addClass('active');
         document.getElementById("subtitle").innerHTML = "Liste over nærtudløbende varer";
     });
-    
+
     // gemmer det nye antal af varer
     $(document).on('click', '#saveBtn', (event) => {
 
