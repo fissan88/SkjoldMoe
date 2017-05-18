@@ -148,7 +148,10 @@ function addItemsToExpirationLists() {
         return month
     }
 }
-// Search Function
+// OTHER FUNCTIONS
+// =============================================================================
+
+// søge function, som sorterer automatisk i et given list-group område. Funktionelt er det instant-results.
 $(document).on('keyup', '#search', function () {
     var current_query = $('#search').val();
     if (current_query !== "") {
@@ -164,11 +167,12 @@ $(document).on('keyup', '#search', function () {
     }
 });
 
+// TOGGLING AND LOADING THINGS
+// =============================================================================
+
+// når siden er klar, bliver følgende funktioner og toggles loadet.
 $(document).ready(function () {
     addItemsToExpirationLists();
-
-// BUTTON ACTIONS
-// =============================================================================
 
     function toggleButtons() {
         $('#btnDatoliste').removeClass('active');
@@ -176,27 +180,44 @@ $(document).ready(function () {
         $('#btnSortiment').removeClass('active');
     }
 
+// BUTTON ACTIONS
+// =============================================================================
+
+    // loader index.hbs og opdatere jumbotron
     $('#btnDatoliste').click(function () {
         compileNewBody("index.hbs");
         toggleButtons();
         $('#btnDatoliste').addClass('active');
         addItemsToExpirationLists();
+        document.getElementById("subtitle").innerHTML = "Liste over nærtudløbende varer";
     });
 
+    // loader registrer.hbs og opdatere jumbotron
     $('#btnRegistrer').click(function () {
         compileNewBody("registrer.hbs");
         populateSortimentList();
         toggleButtons();
         $('#btnRegistrer').addClass('active');
+        document.getElementById("subtitle").innerHTML = "Liste over varer med manglende datoregistring, samt datoregistring af varer";
     });
 
+    // loader sortiment.hbs og opdatere jumbotron
     $('#btnSortiment').click(function () {
         compileNewBody("sortiment.hbs");
         populateSortimentList();
         toggleButtons();
         $('#btnSortiment').addClass('active');
+        document.getElementById("subtitle").innerHTML = "Liste over sortimentet, samt tilføjelse til sortiment";
     });
 
+    // loader index.hbs og opdatere jumbotron
+    $('#jumbo').click(function () {
+        compileNewBody("index.hbs")
+        toggleButtons();
+        $('#btnDatoliste').addClass('active');
+        document.getElementById("subtitle").innerHTML = "Liste over nærtudløbende varer";
+    });
+    
     // gemmer det nye antal af varer
     $(document).on('click', '#saveBtn', (event) => {
 
@@ -217,6 +238,7 @@ $(document).ready(function () {
 
     });
 
+    // tilføjer et nyt produkt
     $(document).on('click', '#btnCreateProduct', function () {
 
         let newProduct = {
@@ -237,9 +259,11 @@ $(document).ready(function () {
         });
     });
 
+
     $(document).on('click', 'li', (event) => {
         $('#selectedProductBarcode').val($(event.target).data('barcode'));
     });
+
 
     $(document).on('click', '#btnCreateExpiration', function () {
         let barcode = $('#selectedProductBarcode').val();

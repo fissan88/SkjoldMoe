@@ -24,9 +24,19 @@
     border-radius: 35px;
 }
 
+.glyphicon {
+    color: #5cb85c;
+}
+
 #numSelect {
     width: 40px;
 }
+
+#search {
+    height: 35px;
+}
+
+
 
 #interactive.viewport {position: relative; width: 100%; height: auto; overflow: hidden; text-align: center;}
 #interactive.viewport > canvas, #interactive.viewport > video {max-width: 100%;width: 100%;}
