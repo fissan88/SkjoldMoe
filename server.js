@@ -20,29 +20,34 @@ app.use(bodyParser.json());
 app.use(morgan('tiny'));
 app.use(express.static('public'));
 
-// MongdoDB and Mongoose
+// MONGODB & MONGOOSE
 mongoose.connect("mongodb://user:1234@ds111461.mlab.com:11461/skjoldmoe").connection;
 console.log("Connected to database ...");
 
-// Model
-// var Message = require('./models/message');
-    // ROUTES FOR OUR APP
+// ROUTES FOR OUR API
 // =============================================================================
 const productRouter = require("./route/products.js")(express);
-const expRouter = require('./route/collExpirations.js')(express);
+const expRouter = require('./route/expirations.js')(express);
 const usersRouter = require('./route/users.js')(express);
+const productsTodayRouter = require("./route/productsToday.js")(express);
 
 app.use(productRouter);
+app.use(productsTodayRouter);
 app.use(expRouter);
 app.use(usersRouter);
 
-//Setup views
+
+// VIEWS
+// =============================================================================
 app.set('view engine', 'hbs');
 app.set('views', './public/views');
 
+
+// SESSION & LOGIN
+// =============================================================================
 app.use(session({secret: 'ssshhhh'}));
 
-var sess;
+let sess;
 
 app.get('/', (req, res) => {
    sess = req.session;
@@ -82,7 +87,7 @@ app.get('/index', (req, res) => {
 });
 
 
-// START THE SERVER
+// START THE SERVER .....
 // =============================================================================
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));

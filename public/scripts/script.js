@@ -1,11 +1,13 @@
 /**
  * Created by tuxzo on 03-04-2017.
  */
+let currentSelectedProduct;
+let tmpDates = [];
+let tempCollExp;
+let counterForIdDeleteGlyph = 0;
+
 // RENDERING OF PAGES
 // =============================================================================
-var currentSelectedProduct;
-var tmpDates = [];
-var newCollExp;
 
 function compileNewBody(templateName) {
     $.get('../views/' + templateName, function (template) {
@@ -27,24 +29,24 @@ function populateProductsToRegister(targetContainer) {
                 + '</div></li>');
 
             $('#glyphRegisterExp' + req[i]._id).on('click', () => {
-                    addExpirationsToProduct(req[i]);
+                    showAddExpirationsToProduct(req[i]);
             });
         }
     });
 }
 
-function populateProductsToRegisterDriedGoods(targetContainer, isDryGoods) {
+function populateProductsToRegisterDryGoods(targetContainer, isDryGoods) {
     $.get('/api/productsToday/' + isDryGoods, (req,res) => {
         $(targetContainer).empty();
         for (let i in req) {
             $(targetContainer).append('<li class="list-group-item">'
                 + '<label>'+req[i]._id + ' - ' + req[i].name+'</label>'
                 + '<div class="pull-right action-buttons">'
-                + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-plus" id="glyphRegisterExp' + req[i]._id + '"></span></a>'
+                + '<a href="#" data-barcode="' + req[i]._id + '"><span class="glyphicon glyphicon-plus" id="glyphRegisterExp' + isDryGoods + req[i]._id + '"></span></a>'
                 + '</div></li>');
 
-            $('#glyphRegisterExp' + req[i]._id).on('click', () => {
-                addExpirationsToProduct(req[i]);
+            $('#glyphRegisterExp' + isDryGoods + req[i]._id).on('click', () => {
+                showAddExpirationsToProduct(req[i]);
             });
         }
     });
@@ -74,7 +76,7 @@ function populateSortimentList() {
                 + '</div></li>');
 
             $('#glyphEdit' + req[i]._id).on('click', () => {
-                editGoods(req[i]._id, req[i].name, req[i].isDryGoods);
+                editProduct(req[i]._id, req[i].name, req[i].isDryGoods);
             });
 
             $('#glyphDelete' + req[i]._id).on('click', () => {
@@ -84,17 +86,12 @@ function populateSortimentList() {
     });
 }
 
-function removeTempDate() {
-    tmpDates.splice(tmpDates.indexOf(newCollExp), 1);
-    $(this).closest('li').remove();
-};
-
-// FUNCTIONS GETTING FROM SERVER
+// FUNCTIONS GETTING & POSTING FROM SERVER
 // =============================================================================
 
 function registerExp(barcode, date, quantity) {
     return new Promise((resolve, reject) => {
-        $.post('./api/collExpirations/', {
+        $.post('./api/expirations/', {
             'barcode': barcode,
             'date': date,
             'quantity': quantity
@@ -110,7 +107,7 @@ function registerExp(barcode, date, quantity) {
     });
 }
 
-function editGoods(barcode, name, isDryGoods) {
+function editProduct(barcode, name, isDryGoods) {
     $('#editGoodsModal').modal("show");
     $('#nameModal').val(name);
     $('#barcodeModal').val(barcode);
@@ -153,7 +150,7 @@ function updateProduct(barcode, name, isDryGoods) {
     });
 }
 
-function addExpirationsToProduct(product) {
+function showAddExpirationsToProduct(product) {
     $('#dateRegModal').modal("show");
     $('#dateRegModalBody').empty();
     currentSelectedProduct = product;
@@ -161,13 +158,17 @@ function addExpirationsToProduct(product) {
     if(product.expirations.length > 0) {
         let req = product.expirations;
         for (let i in req) {
-            $('#dateRegModalBody').append('<li class="list-group-item">'
+            $('#dateRegModalBody').append('<li id="liInitialExpiration" class="list-group-item">'
                 + '<label>'+req[i].date.slice(0,10) + '</label>'
                 + '<div class="pull-right action-buttons">'
                 + '<a href="#" data-barcode="' + req[i].barcode + '"><span  class="glyphicon glyphicon-trash" id="modalGlyphDelete' + req[i].barcode + '"></span></a>'
                 + '</div></li>');
             $('#modalGlyphDelete' + req[i].barcode).click(() => {
-
+                $('#liInitialExpiration').remove();
+                $.ajax({
+                    url: '/api/expirations/' + req[i]._id,
+                    type: 'DELETE'
+                });
             });
         }
     }
@@ -175,24 +176,24 @@ function addExpirationsToProduct(product) {
 };
 
 function addItemsToExpirationLists(){
-    $.get('/api/collExpirations', (req, res) =>{
+    $.get('/api/expirations', (req, res) =>{
         for(let i in req){
-            var currentDate = new Date;
-            var month = currentDate.getMonth();
+            let currentDate = new Date;
+            let month = currentDate.getMonth();
             month = monthConverter(month);
-            var currentDateString = currentDate.getFullYear() + '-' + month + '-' + currentDate.getDate();
+            let currentDateString = currentDate.getFullYear() + '-' + month + '-' + currentDate.getDate();
 
-            var productDate = req[i].date;
-            var productDateString = productDate.slice(0, 10);
+            let productDate = req[i].date;
+            let productDateString = productDate.slice(0, 10);
 
             if (productDateString === currentDateString) {
                 $.get('/api/products/' + req[i].barcode, (product, res2) => {
-                    var listLocation = 'fresh';
+                    let listLocation = 'fresh';
                     if (product.isDryGoods) {
                         listLocation = 'dry';
                     }
-                    var quantity = req[i].quantity;
-                    var okGlyphicon = '';
+                    let quantity = req[i].quantity;
+                    let okGlyphicon = '';
 
                     if (req[i].isChecked) {
                         okGlyphicon = '<span id="saveBtn" class="glyphicon glyphicon-ok"></span>';
@@ -211,6 +212,47 @@ function addItemsToExpirationLists(){
         return month
     }
 }
+
+function createProduct() {
+    let newProduct = {
+        _id: $('#newProductBarcode').val(),
+        name: $('#newProductName').val(),
+        orderNumber: $('#newProductOrderNumber').val(),
+        isDryGoods: $('#isDryGoods').is(':checked')
+    };
+
+    $.post("/api/products", newProduct, function (data) {
+        alert("Varen blev oprettet succesfuldt!");
+    }).done(() => {
+        $('#newProductBarcode').val("");
+        $('#newProductName').val("");
+        $('#newProductOrderNumber').val("");
+        $('#isDryGoods').prop('checked', false);
+        populateSortimentList();
+    });
+}
+
+function createUser(userName, password) {
+    $.get('/api/user/' + userName, (req, res) =>{
+        if(req){
+            var user = {
+                name: userName,
+                password: password
+            };
+            $.post('/api/users', user, () =>{
+                $('#createUserFeedback').removeClass('redText');
+                $('#createUserFeedback').addClass('greenText');
+                $('#createUserFeedback').text('Bruger oprettet');
+                $('#createUserUserName').val('');
+                $('#createUserPassword').val('');
+            });
+        } else{
+            $('#createUserFeedback').text('Brugernavn i brug');
+            return;
+        }
+    });
+}
+
 // OTHER FUNCTIONS
 // =============================================================================
 
@@ -230,10 +272,14 @@ $(document).on('keyup', '#search', function () {
     }
 });
 
+function removeTempDate(numberOfListitem) {
+    tmpDates.splice(tmpDates.indexOf(tempCollExp), 1);
+    $('#tmpDateListItem' + numberOfListitem).remove();
+};
+
 // TOGGLING AND LOADING THINGS
 // =============================================================================
 
-// når siden er klar, bliver følgende funktioner og toggles loadet.
 $(document).ready(function () {
     addItemsToExpirationLists();
     compileNewBody("index.hbs");
@@ -250,8 +296,6 @@ $(document).ready(function () {
         $('#btnOpretBruger').removeClass('active');
     }
 
-
-    // loader index.hbs og opdatere jumbotron
     $('#btnDatoliste').click(function () {
         compileNewBody("index.hbs");
         toggleButtons();
@@ -260,7 +304,6 @@ $(document).ready(function () {
         document.getElementById("subtitle").innerHTML = "Liste over nærtudløbende varer";
     });
 
-    // loader registrer.hbs og opdatere jumbotron
     $('#btnRegistrer').click(function () {
         compileNewBody("registrer.hbs");
         populateProductsToRegister('#tabRegAllContent');
@@ -269,7 +312,6 @@ $(document).ready(function () {
         document.getElementById("subtitle").innerHTML = "Liste over varer med manglende datoregistring, samt datoregistring af varer";
     });
 
-    // loader sortiment.hbs og opdatere jumbotron
     $('#btnSortiment').click(function () {
         compileNewBody("sortiment.hbs");
         populateSortimentList();
@@ -284,24 +326,20 @@ $(document).ready(function () {
         $('#btnOpretBruger').addClass('active');
     });
 
-    // loader index.hbs og opdatere jumbotron
     $('#jumbo').click(function () {
-        compileNewBody("index.hbs")
+        compileNewBody("index.hbs");
         toggleButtons();
         $('#btnDatoliste').addClass('active');
         document.getElementById("subtitle").innerHTML = "Liste over nærtudløbende varer";
     });
 
-    // gemmer det nye antal af varer
-
     $(document).on('click', '#saveBtn', (event)=> {
-
-        var id = $(event.target.parentNode.parentNode).data('id');
-        var quantity = $(event.target.parentNode.previousSibling.firstChild).val();
+        const id = $(event.target.parentNode.parentNode).data('id');
+        let quantity = $(event.target.parentNode.previousSibling.firstChild).val();
 
         $.ajax({
             type: "PUT",
-            url: "/api/collExpirations/" + id,
+            url: "/api/expirations/" + id,
             contentType: "application/json",
             data: JSON.stringify({quantity: quantity, isChecked: true})
         }).done(() => {
@@ -310,28 +348,10 @@ $(document).ready(function () {
             }
             $(event.target.parentNode.parentNode).fadeTo('slow', 0.5).fadeTo('slow', 1.0);
         });
-
     });
 
-    // tilføjer et nyt produkt
     $(document).on('click', '#btnCreateProduct', function () {
-
-        let newProduct = {
-            _id: $('#newProductBarcode').val(),
-            name: $('#newProductName').val(),
-            orderNumber: $('#newProductOrderNumber').val(),
-            isDryGoods: $('#isDryGoods').is(':checked')
-        };
-
-        $.post("/api/products", newProduct, function (data) {
-            alert("Varen blev oprettet succesfuldt!");
-        }).done(() => {
-            $('#newProductBarcode').val("");
-            $('#newProductName').val("");
-            $('#newProductOrderNumber').val("");
-            $('#isDryGoods').prop('checked', false);
-            populateSortimentList();
-        });
+        createProduct()
     });
 
     $(document).on('click', 'li', (event) => {
@@ -357,29 +377,13 @@ $(document).ready(function () {
             $('#createUserFeedback').text('Indtast brugernavn');
             return;
         }
+
         let password = $('#createUserPassword').val();
         if(password.length <5){
             $('#createUserFeedback').text('Password skal være mindst 5 karakterer');
             return;
         }
-        $.get('/api/user/' + userName, (req, res) =>{
-            if(req){
-                var user = {
-                    name: userName,
-                    password: password
-                };
-                $.post('/api/users', user, () =>{
-                    $('#createUserFeedback').removeClass('redText');
-                    $('#createUserFeedback').addClass('greenText');
-                    $('#createUserFeedback').text('Bruger oprettet');
-                    $('#createUserUserName').val('');
-                    $('#createUserPassword').val('');
-                });
-            } else{
-                $('#createUserFeedback').text('Brugernavn i brug');
-                return;
-            }
-        });
+        createUser(userName, password)
     });
 
     $(document).on('click', '#tabRegAll', (event) => {
@@ -387,20 +391,14 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '#tabRegFresh', (event) => {
-        populateProductsToRegisterDriedGoods('#tabRegFreshContent', "true");
+        populateProductsToRegisterDryGoods('#tabRegFreshContent', "true");
     });
 
     $(document).on('click', '#tabRegDried', (event) => {
-        populateProductsToRegisterDriedGoods('#tabRegDriedContent', "false");
-    });
-
-    $(document).on('click', '#tabRegFromDate', (event) => {
-        $('#tabRegFromDateContent').empty();
-        $('#tabRegFromDateContent').append("Coming soon this christmasX!");
+        populateProductsToRegisterDryGoods('#tabRegDriedContent', "false");
     });
 
     $(document).on('click', '#btnDateRegModalGodkend', (event) => {
-
         let promises = [];
 
         for(let i = 0; i < tmpDates.length; i++) {
@@ -410,30 +408,29 @@ $(document).ready(function () {
         Promise.all(promises).then(() => {
             populateProductsToRegister('#tabRegAllContent');
         })
-
     });
 
-    //Sletning af det enkelte element fungerer ikke!
     $(document).on('click', '#btnDateRegModalTilfoej', (event) => {
-        newCollExp = {
+        tempCollExp = {
             barcode: currentSelectedProduct._id,
             date: $('#dateRegDatePickerModal').val(),
             quantity: 0
         };
 
-        if(newCollExp.barcode.length > 0)
-            if(newCollExp.date != '')
-            {
-                console.log("trin 2");
-                tmpDates.push(newCollExp);
+        if(tempCollExp.barcode.length > 0)
+            if(tempCollExp.date != '') {
+                tmpDates.push(tempCollExp);
 
-                $('#dateRegModalBody').append('<li class="list-group-item">'
-                    + '<label>'+newCollExp.date.slice(0,10) + '</label>'
+                $('#dateRegModalBody').append('<li id="tmpDateListItem' + counterForIdDeleteGlyph + '" class="list-group-item">'
+                    + '<label>'+tempCollExp.date.slice(0,10) + '</label>'
                     + '<div class="pull-right action-buttons">'
-                    + '<a href="#" data-barcode="' + newCollExp.date + '"><span  class="glyphicon glyphicon-trash" onclick="removeTempDate()"></span></a>'
+                    + '<a href="#" data-barcode="' + tempCollExp.date + '">'
+                    + '<span  class="glyphicon glyphicon-trash" id="glyphDeleteDateModal' + counterForIdDeleteGlyph + '" onclick="removeTempDate(' + counterForIdDeleteGlyph + ')" ></span></a>'
                     + '</div></li>');
 
-                newCollExp = '';
+                counterForIdDeleteGlyph++;
+
+                tempCollExp = '';
                 $('#dateRegDatePickerModal').val('');
             }
 

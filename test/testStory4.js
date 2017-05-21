@@ -1,4 +1,4 @@
-var collExp = require('../models/collExpirations');
+var collExp = require('../models/expiration');
 var assert = require("assert");
 var controller = require('../controllers/controller')
 const app = require('./../server.js');
@@ -7,7 +7,7 @@ var testDate = new Date;
 testDate.setHours(0, 0, 0, 0);
 var testItem;
 var contollerTestitem;
-var testObject = new collExp({
+var testObject = new expiration({
     barcode: "57045399",
     date: testDate,
     quantity: 5
@@ -51,7 +51,7 @@ describe('Database Manipulation Krav', () => {
 
     describe("CRUD funktionerne i controlleren virker hvis...", (done) => {
         it("Test af create", (done) => {
-            let tmpItem = controller.createCollExpiration("5", new Date("2017-05-08"), 10);
+            let tmpItem = controller.createExpiration("5", new Date("2017-05-08"), 10);
             if (tmpItem != null) {
                 contollerTestitem = tmpItem;
                 done();
@@ -60,7 +60,7 @@ describe('Database Manipulation Krav', () => {
         });
 
         it("Test af get", (done) => {
-            var item = controller.getCollExpiration("5", new Date("2017-05-08"), 10);
+            var item = controller.getExpiration("5", new Date("2017-05-08"), 10);
             item.then(function (doc){
                 item = doc;
                 if (item) {
@@ -73,7 +73,7 @@ describe('Database Manipulation Krav', () => {
         it("Test af update", (done) => {
 
             var item = contollerTestitem;
-            contollerTestitem = controller.updateCollExpiration(contollerTestitem["_id"], "200", new Date("2017-05-07"), 300);
+            contollerTestitem = controller.updateExpiration(contollerTestitem["_id"], "200", new Date("2017-05-07"), 300);
             contollerTestitem.then(function(doc){
                 contollerTestitem = doc;
                 if (contollerTestitem == item) {
@@ -90,7 +90,7 @@ describe('Database Manipulation Krav', () => {
             });
         });
         it("Test af delete", (done) => {
-            controller.deleteCollExpiration(contollerTestitem["_id"]);
+            controller.deleteExpiration(contollerTestitem["_id"]);
             // collExp.remove({_id: contollerTestitem["_id"]});
             collExp.findOne({_id: contollerTestitem["_id"]}, (err, item) => {
                 if (item) {

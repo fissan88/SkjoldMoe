@@ -34,8 +34,8 @@ module.exports = (express) => {
 
             if (BARCODE_REGEX.test(id)) {
                   if (name !== null) {
-                          console.log("Kalder controller funktionen updateCollProducts");
-                          controller.updateCollProducts(id, name, isDryGoods);
+                          console.log("Kalder controller funktionen updateProduct");
+                          controller.updateProduct(id, name, isDryGoods);
                           res.status(200).json({message: "Produktet blev opdateret"});
                 }
             }
@@ -46,9 +46,9 @@ module.exports = (express) => {
     router.route('/api/products/:id')
         .get((req, res) => {
             if(req.params.id.length === 6) {
-                var item = controller.getCollProductByOrderNumber(req.params.id);
+                var item = controller.getProductByOrderNumber(req.params.id);
             } else {
-                var item = controller.getCollProductById(req.params.id);
+                var item = controller.getProductById(req.params.id);
             }
             item.then(function (doc) {
                 if (doc) {
@@ -91,18 +91,6 @@ module.exports = (express) => {
                 }
             });
         });
-
-    // router.route('/api/productsTodayFilterByDate/:date')
-    //     .get((req, res) => {
-    //         let getPro = controller.filterGetProductsTodayByDate(req.params.date);
-    //         getPro.then((docs) => {
-    //             if(docs) {
-    //                 res.status(200).json(docs);
-    //             } else {
-    //                 res.status(418).json('I am a teapot');
-    //             }
-    //         });
-    //     });
 
     return router;
 };

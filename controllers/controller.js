@@ -1,14 +1,14 @@
 /**
  * Created by myBestFreind on 20-04-2017.
  */
-const collExp = require('../models/collExpirations');
+const expiration = require('../models/expiration');
 const collProduct = require('../models/product');
 const collUsers = require('../models/user');
 const BARCODE_REGEX = /^\d{8}|\d{13}|\d{15}$/;
 const mongoose = require('mongoose');
 
-exports.createCollExpiration = (barcode, date, quantity) => {
-    let tmpItem = new collExp({
+exports.createExpiration = (barcode, date, quantity) => {
+    let tmpItem = new expiration({
         barcode: barcode,
         date: date,
         quantity: quantity
@@ -17,8 +17,8 @@ exports.createCollExpiration = (barcode, date, quantity) => {
     return tmpItem;
 };
 
-exports.getCollExpiration = (barcode, date, quantity) => {
-    let query = collExp.findOne({barcode: barcode, date: date, quantity: quantity});
+exports.getExpiration = (barcode, date, quantity) => {
+    let query = expiration.findOne({barcode: barcode, date: date, quantity: quantity});
     return query.exec(function (err, docs) {
         if (err) return err;
         else {
@@ -27,8 +27,8 @@ exports.getCollExpiration = (barcode, date, quantity) => {
     });
 };
 
-exports.getAllCollExpirations = () => {
-    let query = collExp.find({});
+exports.getAllExpirations = () => {
+    let query = expiration.find({});
     return query.exec(function (err, docs) {
         if (err) return err;
         else {
@@ -37,8 +37,8 @@ exports.getAllCollExpirations = () => {
     });
 };
 
-exports.deleteCollExpiration = (id) => {
-    collExp.findOne({_id: id}, function (err, doc) {
+exports.deleteExpiration = (id) => {
+    expiration.findOne({_id: id}, function (err, doc) {
         doc.remove((err) => {
             if (err) {
                 return err;
@@ -47,8 +47,8 @@ exports.deleteCollExpiration = (id) => {
     });
 };
 
-function deleteExpirationsByBarcode(barcode) {
-    let query = collExp.find({barcode: barcode});
+function deleteExpirationByBarcode(barcode) {
+    let query = expiration.find({barcode: barcode});
     return query.exec(function (err, docs) {
         if (err) return err;
         else {
@@ -63,7 +63,7 @@ exports.getExpByBarcodeToday = (id) => {
     let today = new Date();
     today.setUTCHours(0,0,0,0);
 
-    let query = collExp.find({barcode: id, date: {$gte: today}});
+    let query = expiration.find({barcode: id, date: {$gte: today}});
     return query.exec((err, docs) => {
         if (err) return err;
         else {
@@ -73,7 +73,7 @@ exports.getExpByBarcodeToday = (id) => {
 };
 
 exports.deleteProduct = (id) => {
-    deleteExpirationsByBarcode(id);
+    deleteExpirationByBarcode(id);
 
     collProduct.findOne({_id: id}, function (err, doc) {
         doc.remove((err) => {
@@ -84,14 +84,14 @@ exports.deleteProduct = (id) => {
     });
 };
 
-exports.getCollExpirationById = (id) => {
-    return collExp.findById(id).exec((err, docs) => {
+exports.getExpirationById = (id) => {
+    return expiration.findById(id).exec((err, docs) => {
         if (err) return err; else return docs;
     });
 };
 
-exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
-    let query = collExp.findByIdAndUpdate(oldId, {
+exports.updateExpiration = (oldId, newBarcode, newDate, newQuantity) => {
+    let query = expiration.findByIdAndUpdate(oldId, {
         barcode: newBarcode,
         date: newDate,
         quantity: newQuantity
@@ -104,8 +104,8 @@ exports.updateCollExpiration = (oldId, newBarcode, newDate, newQuantity) => {
     });
 };
 
-exports.updateQuantityCollExpiration = (id, quantity, isChecked) => {
-    let query = collExp.findByIdAndUpdate(id, {
+exports.updateQuantityOfExpiration = (id, quantity, isChecked) => {
+    let query = expiration.findByIdAndUpdate(id, {
         quantity: quantity,
         isChecked: isChecked
     }, {new: true});
@@ -137,8 +137,7 @@ exports.createProduct = function (id, name, isDryGoods, orderNumber) {
     });
 };
 
-exports.updateCollProducts = (id, newName, newIsDryGoods) => {
-
+exports.updateProduct = (id, newName, newIsDryGoods) => {
     collProduct.findOne({_id: id}, function (err, doc) {
         doc.name = newName;
         doc.isDryGoods = newIsDryGoods;
@@ -150,8 +149,7 @@ exports.updateCollProducts = (id, newName, newIsDryGoods) => {
     });
 };
 
-exports.getCollProductById = (id) => {
-
+exports.getProductById = (id) => {
     let query =  collProduct.findById(id);
     return query.exec((err,docs) => {
         if(err) return err;
@@ -161,7 +159,7 @@ exports.getCollProductById = (id) => {
 
 //TODO: sender en liste med expirations fra i dag / ligger lige nu i script på klientsiden
 exports.getExpToday = (inputDate) => {
-    var query = collExp.find({date: inputDate});
+    var query = expiration.find({date: inputDate});
     return query.exec(function (err, docs) {
         if (err) return err;
         else {
@@ -176,7 +174,7 @@ exports.getExpToday = (inputDate) => {
 //         let tempArr = [];
 //         let inputDate = new Date();
 //         inputDate.setUTCHours(0, 0, 0, 0);
-//         let query = collExp.find({date: inputDate});
+//         let query = expiration.find({date: inputDate});
 //
 //         query.exec(function (err, docs) {
 //             return docs;
@@ -337,7 +335,7 @@ exports.filterGetProductsTodayByDate = (date) => {
     });
 };
 
-exports.getCollProductByOrderNumber = orderNumber => {
+exports.getProductByOrderNumber = orderNumber => {
 
     let query =  collProduct.find({"orderNumber": orderNumber});
     return query.exec((err,docs) => {
@@ -346,7 +344,6 @@ exports.getCollProductByOrderNumber = orderNumber => {
     });
 };
 
-// Opretter en ny bruger i systemet.
 exports.createUser = function (name, password) {
     return new Promise ((resolve, reject) => {
         if (true) {
@@ -370,4 +367,4 @@ exports.hasUsername = function (username) {
             return docs;
         }
     });
-}
+};
