@@ -57,9 +57,6 @@ module.exports = (express) => {
             })
 
         })
-        .post((req, res) => {
-
-        })
         .delete((req, res) => {
             if(controller.deleteProduct(req.params.id)) {
                 res.status(500);
