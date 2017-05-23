@@ -4,39 +4,39 @@
 var app = require('./../server.js');
 var request = require('supertest');
 
-suite('Testing collExpirations API Endpoints', function() {
-    test('.get /api/collExpirations works', function(done) {
+suite('Testing expirations API Endpoints', function() {
+    test('.get /api/expirations works', function(done) {
         request(app)
-            .get('/api/collExpirations')
+            .get('/api/expirations')
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
 
-    test('.post /api/collExpirations works"', function(done) {
+    test('.post /api/expirations works"', function(done) {
         request(app)
-            .post('/api/collExpirations')
+            .post('/api/expirations')
             .send({'barcode' : '12345678', 'date' : '2017-05-05', 'quantity' : '0'})
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
 
-    test('.get /api/collExpirations/:id works"', function(done) {
+    test('.get /api/expirations/:id works"', function(done) {
         request(app)
-            .get('/api/collExpirations/:5')
+            .get('/api/expirations/:5')
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
 
-    test('.put /api/collExpirations/:id works"', function(done) {
+    test('.put /api/expirations/:id works"', function(done) {
         request(app)
-            .put('/api/collExpirations/:5')
+            .put('/api/expirations/:5')
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
 
-    test('.delete /api/collExpirations/:id works"', function(done) {
+    test('.delete /api/expirations/:id works"', function(done) {
         request(app)
-            .delete('/api/collExpirations/:5')
+            .delete('/api/expirations/:5')
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
