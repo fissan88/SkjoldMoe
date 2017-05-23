@@ -68,29 +68,5 @@ module.exports = (express) => {
             }
         });
 
-    router.route('/api/productsToday')
-        .get((req, res) => {
-            let getPro = controller.getProductsToday();
-            getPro.then((docs) => {
-                if(docs) {
-                    res.status(200).json(docs);
-                } else {
-                    res.status(418).json("I am a teapot");
-                }
-            });
-        });
-
-    router.route('/api/productsToday/:isDryGoods')
-        .get((req, res) => {
-            let getPro = controller.filterGetProductsTodayByIsDryGoods(req.params.isDryGoods);
-            getPro.then((docs) => {
-                if(docs) {
-                    res.status(200).json(docs);
-                } else {
-                    res.status(418).json("I am a teapot");
-                }
-            });
-        });
-
     return router;
 };
