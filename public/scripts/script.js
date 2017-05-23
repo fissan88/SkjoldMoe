@@ -330,6 +330,7 @@ $(document).ready(function () {
         compileNewBody("index.hbs");
         toggleButtons();
         $('#btnDatoliste').addClass('active');
+        addItemsToExpirationLists();
         document.getElementById("subtitle").innerHTML = "Liste over nærtudløbende varer";
     });
 
