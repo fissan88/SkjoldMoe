@@ -324,6 +324,7 @@ $(document).ready(function () {
         compileNewBody("opretBruger.hbs");
         toggleButtons();
         $('#btnOpretBruger').addClass('active');
+        document.getElementById("subtitle").innerHTML = "Opret ny bruger";
     });
 
     $('#jumbo').click(function () {
