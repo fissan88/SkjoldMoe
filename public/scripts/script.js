@@ -29,7 +29,7 @@ function populateProductsToRegister(targetContainer) {
                 + '</div></li>');
 
             $('#glyphRegisterExp' + req[i]._id).on('click', () => {
-                    showAddExpirationsToProduct(req[i]);
+                showAddExpirationsToProduct(req[i]);
             });
         }
     });
@@ -182,24 +182,29 @@ function addItemsToExpirationLists(){
             let month = currentDate.getMonth();
             month = monthConverter(month);
             let currentDateString = currentDate.getFullYear() + '-' + month + '-' + currentDate.getDate();
-
+            let weekAhead = new Date;
+            weekAhead.setDate(weekAhead.getDate() + 7);
+            month = weekAhead.getMonth();
+            month = monthConverter(month);
+            let weekAheadDateString = weekAhead.getFullYear() + '-' + month + '-' + weekAhead.getDate();
             let productDate = req[i].date;
             let productDateString = productDate.slice(0, 10);
-
-            if (productDateString === currentDateString) {
+            if (productDateString >= currentDateString && productDateString <= weekAheadDateString) {
                 $.get('/api/products/' + req[i].barcode, (product, res2) => {
-                    let listLocation = 'fresh';
-                    if (product.isDryGoods) {
-                        listLocation = 'dry';
-                    }
-                    let quantity = req[i].quantity;
-                    let okGlyphicon = '';
+                    if(product.isDryGoods || productDateString === currentDateString) {
+                        let listLocation = 'fresh';
+                        if (product.isDryGoods) {
+                            listLocation = 'dry';
+                        }
+                        let quantity = req[i].quantity;
+                        let okGlyphicon = '';
 
-                    if (req[i].isChecked) {
-                        okGlyphicon = '<span id="saveBtn" class="glyphicon glyphicon-ok"></span>';
+                        if (req[i].isChecked) {
+                            okGlyphicon = '<span id="saveBtn" class="glyphicon glyphicon-ok"></span>';
+                        }
+                        quantity = 'value =' + quantity;
+                        $('#' + listLocation + 'Goods').append('<tr  data-barcode="' + product._id + '" data-id="' + req[i]._id + '"><td>' + product.name + '</td><td><input id="numSelect" type="number" ' + quantity + '></td><td><span id="saveBtn" class="glyphicon glyphicon-floppy-disk"></span>' + okGlyphicon + '</td></tr>')
                     }
-                    quantity = 'value =' + quantity;
-                    $('#' + listLocation + 'Goods').append('<tr  data-barcode="' + product._id + '" data-id="' + req[i]._id + '"><td>' + product.name + '</td><td><input id="numSelect" type="number" ' + quantity + '></td><td><span id="saveBtn" class="glyphicon glyphicon-floppy-disk"></span>' + okGlyphicon + '</td></tr>')
                 });
             }
         }
