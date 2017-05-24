@@ -5,6 +5,8 @@ let currentSelectedProduct;
 let tmpDates = [];
 let tempCollExp;
 let counterForIdDeleteGlyph = 0;
+const BARCODE_REGEX = /^\d{8}|\d{13}|\d{15}$/;
+const ORDERNUMBER_REGEX = /^\d{6}$/;
 
 // RENDERING OF PAGES
 // =============================================================================
@@ -226,15 +228,31 @@ function createProduct() {
         isDryGoods: $('#isDryGoods').is(':checked')
     };
 
-    $.post("/api/products", newProduct, function (data) {
-        alert("Varen blev oprettet succesfuldt!");
-    }).done(() => {
-        $('#newProductBarcode').val("");
-        $('#newProductName').val("");
-        $('#newProductOrderNumber').val("");
-        $('#isDryGoods').prop('checked', false);
-        populateSortimentList();
-    });
+        if (BARCODE_REGEX.test(newProduct._id)) {
+            if(newProduct.name.length > 0) {
+                if(ORDERNUMBER_REGEX.test(newProduct.orderNumber)) {
+                    $.post("/api/products", newProduct, function (data) {
+                        alert("Varen blev oprettet succesfuldt!");
+                    }).done(() => {
+                        $('#newProductBarcode').val("");
+                        $('#newProductName').val("");
+                        $('#newProductOrderNumber').val("");
+                        $('#isDryGoods').prop('checked', false);
+                        populateSortimentList();
+                    });
+                } else {
+                    alert("Bestillingsnummeret skal være 6 karakterer lang og kun bestå af tal.")
+                }
+
+            } else {
+                alert("Navnet på varen skal minimum være en karaktere lang.")
+            }
+
+        } else {
+            alert("Stregkoden skal være enten 8, 13 eller 15 karakterer lang og kun bestå at tal.")
+        }
+
+
 }
 
 function createUser(userName, password) {
@@ -380,6 +398,7 @@ $(document).ready(function () {
     $(document).on('click', '#btnCreateUser', ()=>{
         $('#createUserFeedback').addClass('redText');
         let userName = $('#createUserUserName').val();
+
         if(userName.length == 0){
             $('#createUserFeedback').text('Indtast brugernavn');
             return;
