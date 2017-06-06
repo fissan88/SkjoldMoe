@@ -183,12 +183,16 @@ function addItemsToExpirationLists(){
             let currentDate = new Date;
             let month = currentDate.getMonth();
             month = monthConverter(month);
-            let currentDateString = currentDate.getFullYear() + '-' + month + '-' + currentDate.getDate();
+            let day = currentDate.getDate();
+            day = dayConvert(day);
+            let currentDateString = currentDate.getFullYear() + '-' + month + '-' + day;
             let weekAhead = new Date;
             weekAhead.setDate(weekAhead.getDate() + 7);
             month = weekAhead.getMonth();
             month = monthConverter(month);
-            let weekAheadDateString = weekAhead.getFullYear() + '-' + month + '-' + weekAhead.getDate();
+            day = weekAhead.getDate();
+            day = dayConvert(day);
+            let weekAheadDateString = weekAhead.getFullYear() + '-' + month + '-' + day;
             let productDate = req[i].date;
             let productDateString = productDate.slice(0, 10);
             if (productDateString >= currentDateString && productDateString <= weekAheadDateString) {
@@ -217,6 +221,12 @@ function addItemsToExpirationLists(){
             month = '0' + month;
         }
         return month
+    }
+    function dayConvert(day){
+        if (day < 10) {
+            day = '0' + day;
+        }
+        return day
     }
 }
 
